@@ -38,7 +38,10 @@ class _SignUpScreenState extends State<SignUpScreen> {
           registerAndSaveUserRecord();
         }
       }
-    } catch (e) {}
+    } catch (e) {
+      print(e.toString());
+      Fluttertoast.showToast(msg: e.toString());
+    }
   }
 
   registerAndSaveUserRecord() async {
@@ -47,6 +50,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
     try {
       var res = await http.post(
         Uri.parse(API.signUp),
+        //ve verilerimizi iletiyoruz body'ye toJson sayesinde
         body: userModel.toJson(),
       );
       if (res.statusCode == 200) {
@@ -54,6 +58,11 @@ class _SignUpScreenState extends State<SignUpScreen> {
         if (resBodyOfSignUp['success'] == true) {
           Fluttertoast.showToast(
               msg: "Congratulations!, you are SignUp succesfully");
+          setState(() {
+            nameController.clear();
+            eMailController.clear();
+            passwordController.clear();
+          });
         } else {
           Fluttertoast.showToast(msg: "Error occured , try again");
         }
@@ -256,6 +265,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                                     const SizedBox(
                                       height: 10,
                                     ),
+                                    //button
                                     Material(
                                       color: Colors.black,
                                       borderRadius: BorderRadius.circular(38),
