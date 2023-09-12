@@ -1,6 +1,8 @@
 import 'package:clothes_app/api_connection/api_connection.dart';
 import 'package:clothes_app/users/authentication/signup_screen.dart';
+import 'package:clothes_app/users/fragments/dashboard_of_freagments.dart';
 import 'package:clothes_app/users/model/user.dart';
+import 'package:clothes_app/users/userPreferenes/user_preferences.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:get/get.dart';
@@ -21,29 +23,39 @@ class _LoginScreenState extends State<LoginScreen> {
   var isObscure = true.obs;
 
   loginUserNow() async {
-    var res = await http.post(Uri.parse(API.login), body: {
-      'user_email': eMailController.text.trim(),
-      'user_password': passwordController.text.trim(),
-    });
-    //yukarıdaki kod yürütüldükten sonra başarılı mı diye kontrol edelim.
-    if (res.statusCode == 200) {
-      var resBodyOfLogin = jsonDecode(res.body);
-      if (resBodyOfLogin['success'] == true) {
-        Fluttertoast.showToast(msg: "you are logged-in succesfully");
-        //aynı zamanda kulllanıcı bilgilerini iletmeliyiz ki daha sonra giriş yapıldığında
-        //hafızaya bilgiler kaydedilsin.
-        User userInfo = User.fromJson(resBodyOfLogin[
-            'userData']); //json'dan geçirdiğimiz veirleri, kullanıcıyı elde etmemize yardumcı olacaktır
-        //amacımız giriş yapmış kullanıcının tüm bilgileirni hafızada tutmak
-        //yerele paylaşılan referansları kullanarak uygulamaya hizmet edeceğiz.
+    try {
+      var res = await http.post(Uri.parse(API.login), body: {
+        'user_email': eMailController.text.trim(),
+        'user_password': passwordController.text.trim(),
+      });
+      if (res.statusCode == 200) {
+        var resBodyOfLogin = jsonDecode(res.body);
+        if (resBodyOfLogin['success'] == true) {
+          Fluttertoast.showToast(msg: "you are logged-in succesfully");
+          //aynı zamanda kulllanıcı bilgilerini iletmeliyiz ki daha sonra giriş yapıldığında
+          //hafızaya bilgiler kaydedilsin.
+          User userInfo = User.fromJson(resBodyOfLogin[
+              'userData']); //json'dan geçirdiğimiz veirleri, kullanıcıyı elde etmemize yardumcı olacaktır
+          //amacımız giriş yapmış kullanıcının tüm bilgileirni hafızada tutmak
+          //yerele paylaşılan referansları kullanarak uygulamaya hizmet edeceğiz.
 
-        ///To do: save usrInfo to local storage using shared preferences
-      } else {
-        Fluttertoast.showToast(
-            msg:
-                "incorrect credentials. Please write correct password or email and try again ");
+          ///To do: save usrInfo to local storage using shared preferences
+          await RememberUserPreferences.saveRememberUser(userInfo);
+
+          Future.delayed(const Duration(milliseconds: 2000), () {
+            Get.to(const DashBoardOfFragments());
+          });
+        } else {
+          Fluttertoast.showToast(
+              msg:
+                  "incorrect credentials. Please write correct password or email and try again ");
+        }
       }
+    } catch (errorMsg) {
+      print("Error :: $errorMsg");
     }
+
+    //yukarıdaki kod yürütüldükten sonra başarılı mı diye kontrol edelim.
   }
 
   @override
@@ -196,7 +208,11 @@ class _LoginScreenState extends State<LoginScreen> {
                                       borderRadius: BorderRadius.circular(38),
                                       child: InkWell(
                                         onTap: () {
-                                          loginUserNow();
+                                          //öncelikle giriş formumuzu doğrulamalıyız ardından loginUserNOw methodu çağrılır
+                                          if (formKey.currentState!
+                                              .validate()) {
+                                            loginUserNow();
+                                          }
                                         },
                                         borderRadius: BorderRadius.circular(30),
                                         //padding sayesinde conteyner biraz büyüdü
