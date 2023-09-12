@@ -1,5 +1,4 @@
 import 'dart:convert';
-
 import 'package:clothes_app/api_connection/api_connection.dart';
 import 'package:clothes_app/users/authentication/login_screen.dart';
 import 'package:clothes_app/users/model/user.dart';
@@ -44,6 +43,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
     }
   }
 
+//yeni kullanıcı kaydı yapıyoruz
   registerAndSaveUserRecord() async {
     User userModel = User(1, nameController.text.trim(),
         eMailController.text.trim(), passwordController.text.trim());
