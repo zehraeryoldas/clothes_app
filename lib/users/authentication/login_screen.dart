@@ -1,5 +1,5 @@
 import 'package:clothes_app/api_connection/api_connection.dart';
-import 'package:clothes_app/users/authentication/signup_screen.dart';
+import 'package:clothes_app/users/authentication/signupp_screen.dart';
 import 'package:clothes_app/users/fragments/dashboard_of_freagments.dart';
 import 'package:clothes_app/users/model/user.dart';
 import 'package:clothes_app/users/userPreferenes/user_preferences.dart';
@@ -39,11 +39,12 @@ class _LoginScreenState extends State<LoginScreen> {
           //amacımız giriş yapmış kullanıcının tüm bilgileirni hafızada tutmak
           //yerele paylaşılan referansları kullanarak uygulamaya hizmet edeceğiz.
 
-          ///To do: save usrInfo to local storage using shared preferences
-          await RememberUserPreferences.saveRememberUser(userInfo);
+          //: save usrInfo to local storage using shared preferences
+          await RememberUserPreferences.saveRememberUser(
+              userInfo); //bilgilerimizi sharedpreferencese verdik
 
           Future.delayed(const Duration(milliseconds: 2000), () {
-            Get.to(const DashBoardOfFragments());
+            Get.to(DashBoardOfFragments());
           });
         } else {
           Fluttertoast.showToast(
@@ -209,6 +210,8 @@ class _LoginScreenState extends State<LoginScreen> {
                                       child: InkWell(
                                         onTap: () {
                                           //öncelikle giriş formumuzu doğrulamalıyız ardından loginUserNOw methodu çağrılır
+                                          //Kullanıcının giriş yapabilmesi için gerekli olan bilgileri (örneğin, e-posta ve şifre) eksiksiz ve doğru bir şekilde girmesi gerekmektedir.
+                                          //Bu nedenle, kullanıcının bu bilgileri girdiği anda formun doğrulamasını yapmak, giriş işleminin başlamasını gerektiren bir şarttır.
                                           if (formKey.currentState!
                                               .validate()) {
                                             loginUserNow();
