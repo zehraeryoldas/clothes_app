@@ -39,6 +39,7 @@ dependencies:
   http: ^1.1.0
   fluttertoast: ^8.2.2
   shared_preferences: ^2.2.1
+  font_awesome_flutter: ^10.5.0
 
 dev_dependencies:
   flutter_test:
