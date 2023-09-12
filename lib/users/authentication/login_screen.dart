@@ -1,6 +1,11 @@
+import 'package:clothes_app/api_connection/api_connection.dart';
 import 'package:clothes_app/users/authentication/signup_screen.dart';
+import 'package:clothes_app/users/model/user.dart';
 import 'package:flutter/material.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:get/get.dart';
+import 'package:http/http.dart' as http;
+import 'dart:convert';
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({super.key});
@@ -14,6 +19,33 @@ class _LoginScreenState extends State<LoginScreen> {
   var eMailController = TextEditingController();
   var passwordController = TextEditingController();
   var isObscure = true.obs;
+
+  loginUserNow() async {
+    var res = await http.post(Uri.parse(API.login), body: {
+      'user_email': eMailController.text.trim(),
+      'user_password': passwordController.text.trim(),
+    });
+    //yukarıdaki kod yürütüldükten sonra başarılı mı diye kontrol edelim.
+    if (res.statusCode == 200) {
+      var resBodyOfLogin = jsonDecode(res.body);
+      if (resBodyOfLogin['success'] == true) {
+        Fluttertoast.showToast(msg: "you are logged-in succesfully");
+        //aynı zamanda kulllanıcı bilgilerini iletmeliyiz ki daha sonra giriş yapıldığında
+        //hafızaya bilgiler kaydedilsin.
+        User userInfo = User.fromJson(resBodyOfLogin[
+            'userData']); //json'dan geçirdiğimiz veirleri, kullanıcıyı elde etmemize yardumcı olacaktır
+        //amacımız giriş yapmış kullanıcının tüm bilgileirni hafızada tutmak
+        //yerele paylaşılan referansları kullanarak uygulamaya hizmet edeceğiz.
+
+        ///To do: save usrInfo to local storage using shared preferences
+      } else {
+        Fluttertoast.showToast(
+            msg:
+                "incorrect credentials. Please write correct password or email and try again ");
+      }
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -163,7 +195,9 @@ class _LoginScreenState extends State<LoginScreen> {
                                       color: Colors.black,
                                       borderRadius: BorderRadius.circular(38),
                                       child: InkWell(
-                                        onTap: () {},
+                                        onTap: () {
+                                          loginUserNow();
+                                        },
                                         borderRadius: BorderRadius.circular(30),
                                         //padding sayesinde conteyner biraz büyüdü
                                         child: const Padding(
