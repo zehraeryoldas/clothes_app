@@ -1,3 +1,4 @@
+import 'package:clothes_app/admin/admin_login.dart';
 import 'package:clothes_app/api_connection/api_connection.dart';
 import 'package:clothes_app/users/authentication/signupp_screen.dart';
 import 'package:clothes_app/users/fragments/dashboard_of_freagments.dart';
@@ -265,7 +266,9 @@ class _LoginScreenState extends State<LoginScreen> {
                               children: [
                                 const Text("are you an Admin"),
                                 TextButton(
-                                    onPressed: () {},
+                                    onPressed: () {
+                                      Get.to(const AdminLoginScreen());
+                                    },
                                     child: const Text(
                                       "Click Here",
                                       style: TextStyle(
