@@ -26,14 +26,17 @@ class _AdminLoginScreenState extends State<AdminLoginScreen> {
 
   loginAdminNow() async {
     try {
-      var res = await http.post(Uri.parse(API.login), body: {
-        'user_email': eMailController.text.trim(),
-        'user_password': passwordController.text.trim(),
+      var res = await http.post(Uri.parse(API.loginAdmin), body: {
+        'admin_email': eMailController.text.trim(),
+        'admin_password': passwordController.text.trim(),
       });
       if (res.statusCode == 200) {
+        print("selammmmm");
         var resBodyOfLogin = jsonDecode(res.body);
         if (resBodyOfLogin['success'] == true) {
-          Fluttertoast.showToast(msg: "you are logged-in succesfully");
+          print("girdim amq");
+          Fluttertoast.showToast(
+              msg: "Dear Admin, you are logged-in Successfully.");
 
           Future.delayed(const Duration(milliseconds: 2000), () {
             Get.to(const AdminUploadItemsScreen());
@@ -41,7 +44,7 @@ class _AdminLoginScreenState extends State<AdminLoginScreen> {
         } else {
           Fluttertoast.showToast(
               msg:
-                  "incorrect credentials. Please write correct password or email and try again ");
+                  "Incorrect credentials.\n Please write correct password or email and try again ");
         }
       }
     } catch (errorMsg) {
