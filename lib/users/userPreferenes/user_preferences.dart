@@ -1,5 +1,4 @@
 import 'dart:convert';
-
 import 'package:clothes_app/users/model/user.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -16,24 +15,28 @@ class RememberUserPreferences {
 
   static Future<User?> readUserInfo() async {
     User? currentUserInfo;
-
     SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
 
     // "currentUser" adıyla kaydedilmiş kullanıcı bilgileri metnini alıyoruz
     String? userInfo = sharedPreferences.getString("currentUser");
 
-    // Eğer kayıtlı kullanıcı bilgileri varsa
-    // JSON metnini bir  (Map) olarak çözümlüyoruz
-    Map<String, dynamic> userDataMap = jsonDecode(userInfo!);
+    if (userInfo != null) {
+      // Eğer kayıtlı kullanıcı bilgileri varsa
+      // JSON metnini bir (Map) olarak çözümlüyoruz
+      Map<String, dynamic> userDataMap = jsonDecode(userInfo);
 
-    // Çözümlenen JSON verisini User.fromJson ile User sınıfına dönüştürüyoruz
-    currentUserInfo = User.fromJson(userDataMap);
+      // Çözümlenen JSON verisini User.fromJson ile User sınıfına dönüştürüyoruz
+      User currentUserInfo = User.fromJson(userDataMap);
 
-    // Okunan kullanıcı bilgilerini döndürüyoruz (Eğer kayıtlı bilgi yoksa null döner)
-    return currentUserInfo;
+      // Okunan kullanıcı bilgilerini döndürüyoruz
+      return currentUserInfo;
+    } else {
+      // Eğer kayıtlı bilgi yoksa null döner
+      return null;
+    }
   }
 
-//çıkış yaparak kullanıcı bilgilerini hafızadan kaldıracağız
+  // Çıkış yaparak kullanıcı bilgilerini hafızadan kaldıracağız
   static Future<void> removeUserInfo() async {
     SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
     await sharedPreferences.remove("currentUser");
