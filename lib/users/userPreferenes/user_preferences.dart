@@ -32,4 +32,10 @@ class RememberUserPreferences {
     // Okunan kullanıcı bilgilerini döndürüyoruz (Eğer kayıtlı bilgi yoksa null döner)
     return currentUserInfo;
   }
+
+//çıkış yaparak kullanıcı bilgilerini hafızadan kaldıracağız
+  static Future<void> removeUserInfo() async {
+    SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
+    await sharedPreferences.remove("currentUser");
+  }
 }
