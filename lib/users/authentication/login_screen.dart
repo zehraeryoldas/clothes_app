@@ -35,7 +35,7 @@ class _LoginScreenState extends State<LoginScreen> {
           //aynı zamanda kulllanıcı bilgilerini iletmeliyiz ki daha sonra giriş yapıldığında
           //hafızaya bilgiler kaydedilsin.
           User userInfo = User.fromJson(resBodyOfLogin[
-              'userData']); //json'dan geçirdiğimiz veirleri, kullanıcıyı elde etmemize yardumcı olacaktır
+              'userData']); //json'dan geçirdiğimiz verileri, kullanıcıyı elde etmemize yardumcı olacaktır
           //amacımız giriş yapmış kullanıcının tüm bilgileirni hafızada tutmak
           //yerele paylaşılan referansları kullanarak uygulamaya hizmet edeceğiz.
 
