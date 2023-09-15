@@ -15,7 +15,7 @@ class DashBoardOfFragments extends StatelessWidget {
     const HomeFragmentScreen(),
     const FavoriteFragmentScreen(),
     const OrderFragmentScreen(),
-    const ProfileFragmentScreen()
+    ProfileFragmentScreen()
   ];
 
   final List _navigationButtonsProperties = [
