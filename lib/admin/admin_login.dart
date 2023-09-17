@@ -34,7 +34,6 @@ class _AdminLoginScreenState extends State<AdminLoginScreen> {
         print("selammmmm");
         var resBodyOfLogin = jsonDecode(res.body);
         if (resBodyOfLogin['success'] == true) {
-          print("girdim amq");
           Fluttertoast.showToast(
               msg: "Dear Admin, you are logged-in Successfully.");
 
