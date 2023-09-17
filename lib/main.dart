@@ -1,11 +1,22 @@
+import 'dart:io';
+
+import 'package:clothes_app/firebase_options.dart';
 import 'package:clothes_app/users/authentication/login_screen.dart';
 import 'package:clothes_app/users/fragments/dashboard_of_freagments.dart';
 import 'package:clothes_app/users/userPreferenes/user_preferences.dart';
+import 'package:firebase_core/firebase_core.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:get/route_manager.dart';
 
-void main() {
+Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
+  if (kIsWeb || Platform.isAndroid || Platform.isIOS) {
+    await Firebase.initializeApp(
+      options: DefaultFirebaseOptions.currentPlatform,
+    );
+  }
+
   runApp(const MyApp());
 }
 
