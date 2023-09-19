@@ -27,7 +27,7 @@ class HomeFragmentScreen extends StatelessWidget {
         Fluttertoast.showToast(msg: "Error,status code is not 200");
       }
     } catch (errorMsg) {
-      print("Error:: $errorMsg");
+      print("Error::: $errorMsg");
     }
     return trendingClothItemsList;
   }
