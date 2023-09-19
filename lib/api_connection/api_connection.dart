@@ -13,4 +13,7 @@ class API {
 
   //upload save new item
   static const uploadNewItem = "$hostConnect/items/upload.php";
+  //Clothes
+  static const getTrendingMostPopularClothes =
+      "$hostConnect/clothes/trending.php";
 }
