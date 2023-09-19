@@ -45,6 +45,8 @@ class _AdminLoginScreenState extends State<AdminLoginScreen> {
               msg:
                   "Incorrect credentials.\n Please write correct password or email and try again ");
         }
+      } else {
+        Fluttertoast.showToast(msg: "Status is not 200");
       }
     } catch (errorMsg) {
       print("Error :: $errorMsg");

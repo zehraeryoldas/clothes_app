@@ -66,6 +66,8 @@ class _SignUpScreenState extends State<SignUpScreen> {
         } else {
           Fluttertoast.showToast(msg: "Error occured , try again");
         }
+      } else {
+        Fluttertoast.showToast(msg: "Status is not 200");
       }
     } catch (e) {
       print(e.toString());
