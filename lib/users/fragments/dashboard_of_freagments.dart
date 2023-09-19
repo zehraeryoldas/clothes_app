@@ -12,7 +12,7 @@ class DashBoardOfFragments extends StatelessWidget {
 
   final CurrentUser _rememberCurrentUser = Get.put(CurrentUser());
   final List<Widget> _fragmentScreen = [
-    const HomeFragmentScreen(),
+    HomeFragmentScreen(),
     const FavoriteFragmentScreen(),
     const OrderFragmentScreen(),
     ProfileFragmentScreen()
