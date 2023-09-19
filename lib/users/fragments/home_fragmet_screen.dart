@@ -1,9 +1,36 @@
+import 'dart:convert';
+
+import 'package:clothes_app/api_connection/api_connection.dart';
+import 'package:clothes_app/users/model/clothes.dart';
 import 'package:flutter/material.dart';
+import 'package:fluttertoast/fluttertoast.dart';
+import 'package:http/http.dart' as http;
 
 class HomeFragmentScreen extends StatelessWidget {
   HomeFragmentScreen({super.key});
 
   TextEditingController searchController = TextEditingController();
+
+  Future<List<Clothes>> getTrendingClothItems() async {
+    List<Clothes> trendingClothItemsList = [];
+
+    try {
+      var res = await http.post(Uri.parse(API.getTrendingMostPopularClothes));
+      if (res.statusCode == 200) {
+        var resBodyOfTrending = jsonDecode(res.body);
+        if (resBodyOfTrending['success'] == 'true') {
+          for (var eachRecord in resBodyOfTrending["clothItemsData"]) {
+            trendingClothItemsList.add(Clothes.fromJson(eachRecord));
+          }
+        }
+      } else {
+        Fluttertoast.showToast(msg: "Error,status code is not 200");
+      }
+    } catch (errorMsg) {
+      print("Error:: $errorMsg");
+    }
+    return trendingClothItemsList;
+  }
 
   @override
   Widget build(BuildContext context) {
