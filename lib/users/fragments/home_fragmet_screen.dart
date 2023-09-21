@@ -35,6 +35,26 @@ class HomeFragmentScreen extends StatelessWidget {
     return trendingClothItemsList;
   }
 
+  Future<List<Clothes>> getClothItems() async {
+    List<Clothes> clothItemsList = [];
+    try {
+      var res = await http.post(Uri.parse(API.getAllClothes));
+      if (res.statusCode == 200) {
+        var boydOfData = jsonDecode(res.body);
+        if (boydOfData["success"] == true) {
+          for (var eachRecord in boydOfData["clothItemsData"]) {
+            clothItemsList.add(Clothes.fromJson(eachRecord));
+          }
+        }
+      } else {
+        Fluttertoast.showToast(msg: "Error, status code is not 200");
+      }
+    } catch (e) {
+      print("Error:: $e");
+    }
+    return clothItemsList;
+  }
+
   @override
   Widget build(BuildContext context) {
     return SingleChildScrollView(
@@ -74,7 +94,8 @@ class HomeFragmentScreen extends StatelessWidget {
                   fontWeight: FontWeight.bold,
                   fontSize: 24),
             ),
-          )
+          ),
+          allItemWidget(context),
         ],
       ),
     );
@@ -120,6 +141,134 @@ class HomeFragmentScreen extends StatelessWidget {
               const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
         ),
       ),
+    );
+  }
+
+  Widget allItemWidget(context) {
+    return FutureBuilder(
+      future: getClothItems(),
+      builder: (context, AsyncSnapshot<List<Clothes>> dataSnapshot) {
+        if (dataSnapshot.connectionState == ConnectionState.waiting) {
+          return const Center(child: CircularProgressIndicator());
+        }
+        if (dataSnapshot.data == null) {
+          return const Center(
+            child: Text("No new collections item found"),
+          );
+        }
+        if (dataSnapshot.data!.isNotEmpty) {
+          return ListView.builder(
+            shrinkWrap: true,
+            scrollDirection: Axis.vertical,
+            physics: const NeverScrollableScrollPhysics(),
+            itemCount: dataSnapshot.data!.length,
+            itemBuilder: (context, index) {
+              Clothes eachClothItemRecord = dataSnapshot.data![index];
+              return GestureDetector(
+                onTap: () {},
+                child: Container(
+                  width: 200,
+                  margin: EdgeInsets.fromLTRB(index == 0 ? 16 : 8, 10,
+                      index == dataSnapshot.data!.length - 1 ? 16 : 8, 10),
+                  decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(20),
+                      color: Colors.black,
+                      boxShadow: const [
+                        BoxShadow(
+                            offset: Offset(0, 3),
+                            blurRadius: 6,
+                            color: Colors.white)
+                      ]),
+                  child: Row(
+                    children: [
+                      Expanded(
+                          child: Padding(
+                        padding: const EdgeInsets.only(left: 15),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            //name and price
+                            Row(
+                              children: [
+                                Expanded(
+                                    //name
+                                    child: Text(
+                                  eachClothItemRecord.name!,
+                                  maxLines: 2,
+                                  style: const TextStyle(
+                                      fontSize: 18,
+                                      color: Colors.grey,
+                                      fontWeight: FontWeight.bold),
+                                  overflow: TextOverflow.ellipsis,
+                                )),
+                                //price
+                                Padding(
+                                  padding: const EdgeInsets.only(
+                                      left: 12, right: 12),
+                                  child: Text(
+                                    "\$ ${eachClothItemRecord.price}",
+                                    maxLines: 2,
+                                    overflow: TextOverflow.ellipsis,
+                                    style: const TextStyle(
+                                      fontSize: 18,
+                                      color: Colors.purpleAccent,
+                                      fontWeight: FontWeight.bold,
+                                    ),
+                                  ),
+                                ),
+                              ],
+                            ),
+                            const SizedBox(
+                              height: 16,
+                            ),
+                            //tags
+                            Text(
+                              "Tags:\n${eachClothItemRecord.tags.toString().replaceAll("[]", "").replaceAll("]", "")}",
+                              maxLines: 2,
+                              overflow: TextOverflow.ellipsis,
+                              style: const TextStyle(
+                                  fontSize: 18,
+                                  color: Colors.grey,
+                                  fontWeight: FontWeight.bold),
+                            )
+                          ],
+                        ),
+                      )),
+                      ClipRRect(
+                        borderRadius: const BorderRadius.only(
+                          topRight: Radius.circular(20),
+                          bottomRight: Radius.circular(20),
+                        ),
+                        child: FadeInImage(
+                          height: 130,
+                          width: 130,
+                          fit: BoxFit.cover,
+                          placeholder: const AssetImage(
+                              "assets/images/place_holder.png"),
+                          image: NetworkImage(
+                            eachClothItemRecord.image!,
+                          ),
+                          imageErrorBuilder: (context, error, stackTraceError) {
+                            return const Center(
+                              child: Icon(
+                                Icons.broken_image_outlined,
+                              ),
+                            );
+                          },
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              );
+            },
+          );
+        } else {
+          return const Center(
+            child: Text("Empty, No data."),
+          );
+        }
+      },
     );
   }
 
