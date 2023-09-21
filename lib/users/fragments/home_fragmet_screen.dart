@@ -1,10 +1,12 @@
 import 'dart:convert';
 
 import 'package:clothes_app/api_connection/api_connection.dart';
+import 'package:clothes_app/users/items/item_detail_screen.dart';
 import 'package:clothes_app/users/model/clothes.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 import 'package:fluttertoast/fluttertoast.dart';
+import 'package:get/route_manager.dart';
 import 'package:http/http.dart' as http;
 
 class HomeFragmentScreen extends StatelessWidget {
@@ -165,7 +167,11 @@ class HomeFragmentScreen extends StatelessWidget {
             itemBuilder: (context, index) {
               Clothes eachClothItemRecord = dataSnapshot.data![index];
               return GestureDetector(
-                onTap: () {},
+                onTap: () {
+                  Get.to(ItemDetailsScreen(
+                    itemInfo: eachClothItemRecord,
+                  ));
+                },
                 child: Container(
                   width: 200,
                   margin: EdgeInsets.fromLTRB(index == 0 ? 16 : 8, 10,
