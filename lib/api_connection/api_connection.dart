@@ -16,4 +16,7 @@ class API {
   //Clothes
   static const getTrendingMostPopularClothes =
       "$hostConnect/clothes/trending.php";
+
+  //allClothes
+  static const getAllClothes = "$hostConnect/clothes/all.php";
 }
