@@ -1,6 +1,9 @@
+import 'package:clothes_app/users/controller/item_details_controller.dart';
 import 'package:clothes_app/users/model/clothes.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
+import 'package:fluttertoast/fluttertoast.dart';
+import 'package:get/get.dart';
 import 'package:get/route_manager.dart';
 
 class ItemDetailsScreen extends StatefulWidget {
@@ -12,6 +15,8 @@ class ItemDetailsScreen extends StatefulWidget {
 }
 
 class _ItemDetailsScreenState extends State<ItemDetailsScreen> {
+  //sayfayı dinlemek için get ile aldık
+  final itemDetailsController = Get.put(ItemDetailsController());
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -156,9 +161,47 @@ class _ItemDetailsScreenState extends State<ItemDetailsScreen> {
                       style: const TextStyle(fontSize: 16, color: Colors.grey),
                     ),
                   ],
-                ))
+                )),
+
+                Obx(() => Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        IconButton(
+                            onPressed: () {
+                              itemDetailsController.setQuantityItem(
+                                  itemDetailsController.quantity + 1);
+                            },
+                            icon: const Icon(
+                              Icons.add_circle_outline,
+                              color: Colors.white,
+                            )),
+                        Text(
+                          itemDetailsController.quantity.toString(),
+                          style: const TextStyle(
+                              fontSize: 20,
+                              color: Colors.purpleAccent,
+                              fontWeight: FontWeight.bold),
+                        ),
+                        IconButton(
+                            onPressed: () {
+                              //0 dan sonra -1 -2 diye inmesin diye bu şartı koyduk
+                              if (itemDetailsController.quantity - 1 >= 1) {
+                                itemDetailsController.setQuantityItem(
+                                    itemDetailsController.quantity - 1);
+                              } else {
+                                Fluttertoast.showToast(
+                                    msg:
+                                        "Quantity must be 1 0r greater than 1");
+                              }
+                            },
+                            icon: const Icon(
+                              Icons.remove_circle_outline,
+                              color: Colors.white,
+                            )),
+                      ],
+                    ))
               ],
-            )
+            ),
           ],
         ),
       ),
