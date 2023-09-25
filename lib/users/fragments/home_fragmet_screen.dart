@@ -165,11 +165,11 @@ class HomeFragmentScreen extends StatelessWidget {
             physics: const NeverScrollableScrollPhysics(),
             itemCount: dataSnapshot.data!.length,
             itemBuilder: (context, index) {
-              Clothes eachClothItemRecord = dataSnapshot.data![index];
+              Clothes eachClothItemData = dataSnapshot.data![index];
               return GestureDetector(
                 onTap: () {
                   Get.to(ItemDetailsScreen(
-                    itemInfo: eachClothItemRecord,
+                    itemInfo: eachClothItemData,
                   ));
                 },
                 child: Container(
@@ -199,7 +199,7 @@ class HomeFragmentScreen extends StatelessWidget {
                                 Expanded(
                                     //name
                                     child: Text(
-                                  eachClothItemRecord.name!,
+                                  eachClothItemData.name!,
                                   maxLines: 2,
                                   style: const TextStyle(
                                       fontSize: 18,
@@ -212,7 +212,7 @@ class HomeFragmentScreen extends StatelessWidget {
                                   padding: const EdgeInsets.only(
                                       left: 12, right: 12),
                                   child: Text(
-                                    "\$ ${eachClothItemRecord.price}",
+                                    "\$ ${eachClothItemData.price}",
                                     maxLines: 2,
                                     overflow: TextOverflow.ellipsis,
                                     style: const TextStyle(
@@ -229,7 +229,7 @@ class HomeFragmentScreen extends StatelessWidget {
                             ),
                             //tags
                             Text(
-                              "Tags:\n${eachClothItemRecord.tags.toString().replaceAll("[]", "").replaceAll("]", "")}",
+                              "Tags:\n${eachClothItemData.tags.toString().replaceAll("[", "").replaceAll("]", "")}",
                               maxLines: 2,
                               overflow: TextOverflow.ellipsis,
                               style: const TextStyle(
@@ -252,7 +252,7 @@ class HomeFragmentScreen extends StatelessWidget {
                           placeholder: const AssetImage(
                               "assets/images/place_holder.png"),
                           image: NetworkImage(
-                            eachClothItemRecord.image!,
+                            eachClothItemData.image!,
                           ),
                           imageErrorBuilder: (context, error, stackTraceError) {
                             return const Center(
