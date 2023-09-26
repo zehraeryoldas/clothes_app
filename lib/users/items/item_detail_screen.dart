@@ -1,10 +1,15 @@
+import 'dart:convert';
+
+import 'package:clothes_app/api_connection/api_connection.dart';
 import 'package:clothes_app/users/controller/item_details_controller.dart';
 import 'package:clothes_app/users/model/clothes.dart';
+import 'package:clothes_app/users/userPreferenes/current_user.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:get/get.dart';
 import 'package:get/route_manager.dart';
+import 'package:http/http.dart' as http;
 
 class ItemDetailsScreen extends StatefulWidget {
   const ItemDetailsScreen({super.key, required this.itemInfo});
@@ -17,6 +22,36 @@ class ItemDetailsScreen extends StatefulWidget {
 class _ItemDetailsScreenState extends State<ItemDetailsScreen> {
   //sayfayı dinlemek için get ile aldık
   final itemDetailsController = Get.put(ItemDetailsController());
+  final currentUser = Get.put(CurrentUser());
+  addItemToCart() async {
+    try {
+      var res = await http.post(Uri.parse(API.addToCart), body: {
+        "user_id": currentUser.user.user_id.toString(),
+        "item_id": widget.itemInfo.item_id.toString(),
+        "quantity": itemDetailsController.quantity
+            .toString()
+            .toString(), //bunu direkt biz belirliyoruz
+        "color": widget.itemInfo.colors![itemDetailsController
+            .color], //burada renkleri vt. den alıyoruz ardından set ile renk ataması yapıyrouz o yüzden bçyle kullanıldı
+        "size": widget.itemInfo.sizes![itemDetailsController.size]
+      });
+      if (res.statusCode == 200) {
+        var data = jsonDecode(res.body);
+        if (data['success'] = true) {
+          Fluttertoast.showToast(msg: "ittem added to cart succesfully");
+        } else {
+          Fluttertoast.showToast(
+              msg: "error occur. item not saved to cart and try again");
+        }
+      } else {
+        Fluttertoast.showToast(msg: "Status is not 200");
+      }
+    } catch (e) {
+      print(e.toString());
+      Fluttertoast.showToast(msg: "hata : $e");
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -323,7 +358,9 @@ class _ItemDetailsScreenState extends State<ItemDetailsScreen> {
               color: Colors.purpleAccent,
               borderRadius: BorderRadius.circular(10),
               child: InkWell(
-                onTap: () {},
+                onTap: () {
+                  addItemToCart();
+                },
                 borderRadius: BorderRadius.circular(10),
                 child: Container(
                   alignment: Alignment.center,
