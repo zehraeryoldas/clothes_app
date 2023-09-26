@@ -218,7 +218,9 @@ class _ItemDetailsScreenState extends State<ItemDetailsScreen> {
               spacing: 8,
               children: List.generate(widget.itemInfo.sizes!.length, (index) {
                 return Obx(() => GestureDetector(
-                      onTap: () {},
+                      onTap: () {
+                        itemDetailsController.setSizeItem(index);
+                      },
                       child: Container(
                         height: 35,
                         width: 60,
@@ -244,6 +246,97 @@ class _ItemDetailsScreenState extends State<ItemDetailsScreen> {
                       ),
                     ));
               }),
+            ),
+            const SizedBox(
+              height: 8,
+            ),
+            const Text(
+              "color",
+              style: TextStyle(
+                  fontSize: 20,
+                  color: Colors.purpleAccent,
+                  fontWeight: FontWeight.bold),
+            ),
+            const SizedBox(
+              height: 8,
+            ),
+            Wrap(
+              runSpacing: 8,
+              spacing: 8,
+              children: List.generate(widget.itemInfo.colors!.length, (index) {
+                return Obx(() => GestureDetector(
+                      onTap: () {
+                        itemDetailsController.setColorItem(index);
+                      },
+                      child: Container(
+                        height: 35,
+                        width: 100,
+                        decoration: BoxDecoration(
+                            color: itemDetailsController.color == index
+                                ? Colors.purpleAccent.withOpacity(0.2)
+                                : Colors.white,
+                            border: Border.all(
+                                width: 2,
+                                color: itemDetailsController.color == index
+                                    ? Colors.green
+                                    : Colors.black)),
+                        alignment: Alignment.center,
+                        child: Text(
+                          widget.itemInfo.colors![index]
+                              .replaceAll("[", "")
+                              .replaceAll("]", ""),
+                          style: TextStyle(
+                              fontSize: 16,
+                              color: Colors.grey.shade700,
+                              fontWeight: FontWeight.bold),
+                        ),
+                      ),
+                    ));
+              }),
+            ),
+            const SizedBox(
+              height: 8,
+            ),
+            //description
+            const Text(
+              "Description",
+              style: TextStyle(
+                  fontSize: 20,
+                  color: Colors.purpleAccent,
+                  fontWeight: FontWeight.bold),
+            ),
+            const SizedBox(
+              height: 8,
+            ),
+            Text(
+              widget.itemInfo.description!,
+              //metni hizalandıralım
+              textAlign: TextAlign.justify,
+              style: const TextStyle(color: Colors.grey),
+            ),
+            const SizedBox(
+              height: 30,
+            ),
+            //add to cart
+            Material(
+              elevation: 4,
+              color: Colors.purpleAccent,
+              borderRadius: BorderRadius.circular(10),
+              child: InkWell(
+                onTap: () {},
+                borderRadius: BorderRadius.circular(10),
+                child: Container(
+                  alignment: Alignment.center,
+                  height: 50,
+                  child: const Text(
+                    "Add to cart",
+                    style: TextStyle(
+                        color: Colors.white,
+                        fontSize: 18,
+                        fontWeight: FontWeight.bold),
+                  ),
+                ),
+              ),
             )
           ],
         ),
