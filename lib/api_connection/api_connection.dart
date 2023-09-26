@@ -19,4 +19,7 @@ class API {
 
   //allClothes
   static const getAllClothes = "$hostConnect/clothes/all.php";
+
+  //cart to add
+  static const addToCart = "$hostConnect/cart/add.php";
 }
