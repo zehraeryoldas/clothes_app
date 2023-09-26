@@ -202,6 +202,49 @@ class _ItemDetailsScreenState extends State<ItemDetailsScreen> {
                     ))
               ],
             ),
+
+            const Text(
+              "size",
+              style: TextStyle(
+                  fontSize: 20,
+                  color: Colors.purpleAccent,
+                  fontWeight: FontWeight.bold),
+            ),
+            const SizedBox(
+              height: 8,
+            ),
+            Wrap(
+              runSpacing: 8,
+              spacing: 8,
+              children: List.generate(widget.itemInfo.sizes!.length, (index) {
+                return Obx(() => GestureDetector(
+                      onTap: () {},
+                      child: Container(
+                        height: 35,
+                        width: 60,
+                        decoration: BoxDecoration(
+                            color: itemDetailsController.size == index
+                                ? Colors.purpleAccent.withOpacity(0.2)
+                                : Colors.white,
+                            border: Border.all(
+                                width: 2,
+                                color: itemDetailsController.size == index
+                                    ? Colors.green
+                                    : Colors.black)),
+                        alignment: Alignment.center,
+                        child: Text(
+                          widget.itemInfo.sizes![index]
+                              .replaceAll("[", "")
+                              .replaceAll("]", ""),
+                          style: TextStyle(
+                              fontSize: 16,
+                              color: Colors.grey.shade700,
+                              fontWeight: FontWeight.bold),
+                        ),
+                      ),
+                    ));
+              }),
+            )
           ],
         ),
       ),
