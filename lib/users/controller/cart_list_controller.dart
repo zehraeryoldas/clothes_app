@@ -2,8 +2,9 @@ import 'package:clothes_app/users/model/cart.dart';
 import 'package:get/get.dart';
 
 class CartListController extends GetxController {
-  final RxList<Cart> _cartList = <Cart>[].obs;
-  final RxList<int> _selectedItem = <int>[].obs;
+  final RxList<Cart> _cartList = <Cart>[].obs; //user all items in cart
+  final RxList<int> _selectedItem = <int>[]
+      .obs; ////kullanıcının devam etmek istediği ve son siparişi vermek istediği öğeleri seçti
   final RxBool _isSelectedAll = false.obs;
   final RxDouble _total = 0.0.obs;
 
