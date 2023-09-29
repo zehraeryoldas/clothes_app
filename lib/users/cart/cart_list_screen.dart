@@ -75,6 +75,78 @@ class _CartListScreenState extends State<CartListScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.black,
+      appBar: AppBar(
+        backgroundColor: Colors.black,
+        title: const Text("My Cart"),
+        actions: [
+          //to select all items
+          Obx(() => IconButton(
+                onPressed: () {
+                  cartListController.setIsSelectedAll();
+                  cartListController.clearAllSelectedItems();
+                  if (cartListController.isSelectedAll) {
+                    for (var eachItem in cartListController.cartList) {
+                      cartListController.addSelectedItem(eachItem.item_id!);
+                    }
+                  }
+                },
+                icon: Icon(cartListController.isSelectedAll
+                    ? Icons.check_box
+                    : Icons.check_box_outline_blank),
+                color: cartListController.isSelectedAll
+                    ? Colors.white
+                    : Colors.grey,
+              ))
+          //to delete selected item/items
+          ,
+          GetBuilder(
+              init: CartListController(),
+              builder: (controller) {
+                if (cartListController.selectedItem.isNotEmpty) {
+                  return IconButton(
+                      onPressed: () async {
+                        var responseFromDialogBox =
+                            await Get.dialog(AlertDialog(
+                          backgroundColor: Colors.grey,
+                          title: const Text("Delete"),
+                          content: const Text(
+                              "Are you sure to delete selected items from your cart list?"),
+                          actions: [
+                            TextButton(
+                                onPressed: () {
+                                  Get.back();
+                                },
+                                child: const Text(
+                                  "No",
+                                  style: TextStyle(color: Colors.black),
+                                )),
+                            TextButton(
+                                onPressed: () {
+                                  Get.back(result: "yesDelete");
+                                },
+                                child: const Text(
+                                  "Yes",
+                                  style: TextStyle(color: Colors.black),
+                                ))
+                          ],
+                        ));
+                        if (responseFromDialogBox == "yesDelete") {
+                          //delete selected items now
+                          for (var eachSelectedITem
+                              in cartListController.selectedItem) {}
+                        }
+                      },
+                      icon: const Icon(
+                        Icons.delete_sweep,
+                        size: 30,
+                        color: Colors.redAccent,
+                      ));
+                } else {
+                  return Container();
+                }
+              })
+        ],
+      ),
       body: Obx(() => cartListController.cartList.isNotEmpty
           ? ListView.builder(
               itemCount: cartListController.cartList.length,
