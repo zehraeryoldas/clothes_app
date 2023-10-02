@@ -1,5 +1,5 @@
 class API {
-  static const hostConnect = "http://192.168.1.102/api_clothes_store";
+  static const hostConnect = "http://192.168.1.100/api_clothes_store";
   static const hostConnectUser = "$hostConnect/user";
   static const hostConnectAdmin = "$hostConnect/admin";
 
@@ -25,4 +25,10 @@ class API {
 
   //cart to read
   static const readToCart = "$hostConnect/cart/read.php";
+
+  //cart to delete
+  static const deleteToCart = "$hostConnect/cart/delete.php";
+
+  //
+  static const updateItemInCartList = "$hostConnect/cart/update.php";
 }
