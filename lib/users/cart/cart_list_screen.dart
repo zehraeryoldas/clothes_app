@@ -54,13 +54,52 @@ class _CartListScreenState extends State<CartListScreen> {
     if (cartListController.selectedItem.isNotEmpty) {
       for (var itemInCart in cartListController.cartList) {
         // Döngü her öğe için çalışırken, öğenin seçilip seçilmediğini kontrol ediyoruz. Eğer öğe seçilmişse, bu koşul sağlanır ve öğenin toplam tutarı hesaplanır.(contains)
-        if (cartListController.selectedItem.contains(itemInCart.item_id)) {
+        if (cartListController.selectedItem.contains(itemInCart.cart_id)) {
           double eachItemTotalAmount = (itemInCart.price!) *
               (double.parse(itemInCart.quantity.toString()));
           cartListController
               .setTotal(cartListController.total + eachItemTotalAmount);
         }
       }
+    }
+  }
+
+  deleteSelectedItemsFromUserCartList(int cartID) async {
+    try {
+      var res = await http.post(Uri.parse(API.deleteToCart),
+          body: {'cart_id': cartID.toString()});
+      if (res.statusCode == 200) {
+        var resDeleteOfBody = jsonDecode(res.body);
+        if (resDeleteOfBody['success'] == true) {
+          getCurrentUserCartList();
+        } else {
+          //silindikten sonra toplam tutarın güncellemsi için bir daha çağırıyoruz
+          calculateTotalAmount();
+        }
+      } else {
+        Fluttertoast.showToast(msg: "Status Code is not 200");
+      }
+    } catch (e) {
+      Fluttertoast.showToast(msg: "Error: $e");
+    }
+  }
+
+  updateQuantityUserCart(int cartID, int newQuantity) async {
+    try {
+      var res = await http.post(Uri.parse(API.updateItemInCartList), body: {
+        'cart_id': cartID.toString(),
+        'quantity': newQuantity.toString()
+      });
+      if (res.statusCode == 200) {
+        var updateResOfBody = jsonDecode(res.body);
+        if (updateResOfBody['success'] == true) {
+          getCurrentUserCartList();
+        }
+      } else {
+        Fluttertoast.showToast(msg: "Status Code is not 200");
+      }
+    } catch (e) {
+      Fluttertoast.showToast(msg: "Error: $e");
     }
   }
 
@@ -86,7 +125,7 @@ class _CartListScreenState extends State<CartListScreen> {
                   cartListController.clearAllSelectedItems();
                   if (cartListController.isSelectedAll) {
                     for (var eachItem in cartListController.cartList) {
-                      cartListController.addSelectedItem(eachItem.item_id!);
+                      cartListController.addSelectedItem(eachItem.cart_id!);
                     }
                   }
                 },
@@ -132,9 +171,14 @@ class _CartListScreenState extends State<CartListScreen> {
                         ));
                         if (responseFromDialogBox == "yesDelete") {
                           //delete selected items now
-                          for (var eachSelectedITem
-                              in cartListController.selectedItem) {}
+                          for (var selectedITemUserCartID
+                              in cartListController.selectedItem) {
+                            //deleted selected items now
+                            deleteSelectedItemsFromUserCartList(
+                                selectedITemUserCartID);
+                          }
                         }
+                        calculateTotalAmount();
                       },
                       icon: const Icon(
                         Icons.delete_sweep,
@@ -173,13 +217,20 @@ class _CartListScreenState extends State<CartListScreen> {
                         builder: (controller) {
                           return IconButton(
                               onPressed: () {
-                                cartListController
-                                    .addSelectedItem(cartModel.item_id!);
+                                if (cartListController.selectedItem
+                                    .contains(cartModel.cart_id)) {
+                                  cartListController
+                                      .deleteSelectedITem(cartModel.cart_id!);
+                                } else {
+                                  cartListController
+                                      .addSelectedItem(cartModel.cart_id!);
+                                }
+
                                 calculateTotalAmount();
                               },
                               icon: Icon(
                                 cartListController.selectedItem
-                                        .contains(cartModel.item_id)
+                                        .contains(cartModel.cart_id)
                                     ? Icons.check_box
                                     : Icons.check_box_outline_blank,
                                 color: cartListController.isSelectedAll
@@ -260,7 +311,12 @@ class _CartListScreenState extends State<CartListScreen> {
                                       Row(
                                         children: [
                                           IconButton(
-                                              onPressed: () {},
+                                              onPressed: () {
+                                                updateQuantityUserCart(
+                                                    cartModel.cart_id!,
+                                                    cartModel.quantity! + 1);
+                                                calculateTotalAmount();
+                                              },
                                               icon: const Icon(
                                                 Icons.add_circle_outline,
                                                 color: Colors.white,
@@ -275,6 +331,13 @@ class _CartListScreenState extends State<CartListScreen> {
                                           IconButton(
                                               onPressed: () {
                                                 //0 dan sonra -1 -2 diye inmesin diye bu şartı koyduk
+                                                if (cartModel.quantity! - 1 >=
+                                                    1) {
+                                                  updateQuantityUserCart(
+                                                      cartModel.cart_id!,
+                                                      cartModel.quantity! - 1);
+                                                  calculateTotalAmount();
+                                                }
                                               },
                                               icon: const Icon(
                                                 Icons.remove_circle_outline,
