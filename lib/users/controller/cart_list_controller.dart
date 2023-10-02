@@ -18,14 +18,14 @@ class CartListController extends GetxController {
   }
 
 //sepete ürün ekleme kodu
-  addSelectedItem(int itemSelectedID) {
-    _selectedItem.value.add(itemSelectedID);
+  addSelectedItem(int selectedCartID) {
+    _selectedItem.value.add(selectedCartID);
     update();
   }
 
 //sepetten ürün silme kodu
-  deleteSelectedITem(int itemSelectedID) {
-    _selectedItem.value.remove(itemSelectedID);
+  deleteSelectedITem(int selectedItemCartID) {
+    _selectedItem.value.remove(selectedItemCartID);
     update();
   }
 
