@@ -9,7 +9,7 @@ class ItemDetailsController extends GetxController {
   int get quantity => _quantityItem.value;
   int get size => _sizeItem.value;
   int get color => _colorItem.value;
-  bool get favorite => _isFavorite.value;
+  bool get isFavorite => _isFavorite.value;
 
   setQuantityItem(int quantity) {
     _quantityItem.value = quantity;
