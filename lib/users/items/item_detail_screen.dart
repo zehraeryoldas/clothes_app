@@ -94,34 +94,35 @@ class _ItemDetailsScreenState extends State<ItemDetailsScreen> {
                         Icons.arrow_back,
                         color: Colors.purpleAccent,
                       ),
-                    )
+                    ),
+                    const Spacer(),
+                    Obx(() => IconButton(
+                        onPressed: () {
+                          if (itemDetailsController.isFavorite) {
+                            //delete item from favorites
+                          } else {
+                            //save item to user favorites
+                          }
+                        },
+                        icon: Icon(
+                          itemDetailsController.isFavorite
+                              ? Icons.bookmark
+                              : Icons.bookmark_border_outlined,
+                          color: Colors.purpleAccent,
+                        ))),
+                    IconButton(
+                        onPressed: () {
+                          Get.to(const CartListScreen());
+                        },
+                        icon: const Icon(
+                          Icons.shopping_cart,
+                          color: Colors.purpleAccent,
+                        ))
                   ],
                 ),
               )),
-          const Spacer(),
+
           //favorite
-          Obx(() => IconButton(
-              onPressed: () {
-                if (itemDetailsController.isFavorite) {
-                  //delete item from favorites
-                } else {
-                  //save item to user favorites
-                }
-              },
-              icon: Icon(
-                itemDetailsController.isFavorite
-                    ? Icons.bookmark
-                    : Icons.bookmark_border_outlined,
-                color: Colors.purpleAccent,
-              ))),
-          IconButton(
-              onPressed: () {
-                Get.to(const CartListScreen());
-              },
-              icon: const Icon(
-                Icons.shopping_cart,
-                color: Colors.purpleAccent,
-              ))
         ],
       ),
     );
