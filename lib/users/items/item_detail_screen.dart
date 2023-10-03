@@ -1,6 +1,7 @@
 import 'dart:convert';
 
 import 'package:clothes_app/api_connection/api_connection.dart';
+import 'package:clothes_app/users/cart/cart_list_screen.dart';
 import 'package:clothes_app/users/controller/item_details_controller.dart';
 import 'package:clothes_app/users/model/clothes.dart';
 import 'package:clothes_app/users/userPreferenes/current_user.dart';
@@ -74,6 +75,53 @@ class _ItemDetailsScreenState extends State<ItemDetailsScreen> {
             alignment: Alignment.bottomCenter,
             child: itemInfoWidget(),
           )
+
+          //3 buttons-favorite-shopping cart-back
+          ,
+          Positioned(
+              top: MediaQuery.of(context).padding.top,
+              left: 0,
+              right: 0,
+              child: Container(
+                color: Colors.transparent,
+                child: Row(
+                  children: [
+                    IconButton(
+                      onPressed: () {
+                        Get.back();
+                      },
+                      icon: const Icon(
+                        Icons.arrow_back,
+                        color: Colors.purpleAccent,
+                      ),
+                    )
+                  ],
+                ),
+              )),
+          const Spacer(),
+          //favorite
+          Obx(() => IconButton(
+              onPressed: () {
+                if (itemDetailsController.isFavorite) {
+                  //delete item from favorites
+                } else {
+                  //save item to user favorites
+                }
+              },
+              icon: Icon(
+                itemDetailsController.isFavorite
+                    ? Icons.bookmark
+                    : Icons.bookmark_border_outlined,
+                color: Colors.purpleAccent,
+              ))),
+          IconButton(
+              onPressed: () {
+                Get.to(const CartListScreen());
+              },
+              icon: const Icon(
+                Icons.shopping_cart,
+                color: Colors.purpleAccent,
+              ))
         ],
       ),
     );
