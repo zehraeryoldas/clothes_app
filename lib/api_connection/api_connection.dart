@@ -29,6 +29,15 @@ class API {
   //cart to delete
   static const deleteToCart = "$hostConnect/cart/delete.php";
 
-  //
+  //updateItemInCartList
   static const updateItemInCartList = "$hostConnect/cart/update.php";
+
+//favoriteAdd
+  static const favoriteAdd = "$hostConnect/favorite/add.php";
+
+//favoriteDelete
+  static const favoriteDelete = "$hostConnect/favorite/delete.php";
+
+//favoriteValidate
+  static const favoriteValidate = "$hostConnect/favorite/validate_favorite.php";
 }
