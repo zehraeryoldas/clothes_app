@@ -53,6 +53,86 @@ class _ItemDetailsScreenState extends State<ItemDetailsScreen> {
     }
   }
 
+  validateFavoriteList() async {
+    try {
+      var res = await http.post(Uri.parse(API.favoriteValidate), body: {
+        'user_id': currentUser.user.user_id.toString(),
+        'item_id': widget.itemInfo.item_id
+      });
+      if (res.statusCode == 200) {
+        var resBodyOfValidateFavorite = jsonDecode(res.body);
+        if (resBodyOfValidateFavorite['favoriteFound'] == true) {
+          Fluttertoast.showToast(
+              msg: "İtem saved to  Favorite List succesfully");
+        } else {
+          Fluttertoast.showToast(msg: "İtem not saved to Favorite List ");
+        }
+      } else {
+        Fluttertoast.showToast(msg: "Status is not 200");
+      }
+    } catch (e) {
+      print(e.toString());
+      Fluttertoast.showToast(msg: "hata : $e");
+    }
+  }
+
+  addItemToFavoriteList() async {
+    try {
+      var res = await http.post(Uri.parse(API.favoriteAdd), body: {
+        'user_id': currentUser.user.user_id.toString(),
+        'item_id': widget.itemInfo.item_id
+      });
+      if (res.statusCode == 200) {
+        var resBodyOfAddFavorite = jsonDecode(res.body);
+        if (resBodyOfAddFavorite['success'] == true) {
+          Fluttertoast.showToast(
+              msg: "İtem saved to your Favorite List succesfully");
+          //kullanıcı favori listesine başarılı birş şekilde eklenirse,validate yöntemini
+          //çağırmamız grekmektedir. Öğrenin kullanıcının listeisnd eolup olmadığını kontrole decek favori listesi
+          validateFavoriteList();
+        } else {
+          Fluttertoast.showToast(msg: " item is not saved favorite list ");
+        }
+      } else {
+        Fluttertoast.showToast(msg: "Status is not 200");
+      }
+    } catch (e) {
+      print(e.toString());
+      Fluttertoast.showToast(msg: "hata : $e");
+    }
+  }
+
+  deleteItemToFavoriteList() async {
+    try {
+      var res = await http.post(Uri.parse(API.favoriteDelete), body: {
+        'user_id': currentUser.user.user_id.toString(),
+        'item_id': widget.itemInfo.item_id.toString()
+      });
+      if (res.statusCode == 200) {
+        var resBodyOfDeleteFavorite = jsonDecode(res.body);
+        if (resBodyOfDeleteFavorite['success'] == true) {
+          Fluttertoast.showToast(msg: "İtem deleted from your Favorite List");
+          //burada da kullanıcının favori listesinde mevcut olup olmadığını veya mevcut olmadığını doğrulamamız gerekmektedir.
+        } else {
+          Fluttertoast.showToast(
+              msg: "İtem not deleted from your Favorite List");
+        }
+      } else {
+        Fluttertoast.showToast(msg: "Status is not 200");
+      }
+    } catch (e) {
+      print(e.toString());
+      Fluttertoast.showToast(msg: "hata : $e");
+    }
+  }
+
+  //Öğenin zaten kullanıcı favorisinde olup olmadığını kontrol ettiğimiz için favori listemizi doğrulama yöntemimizi initstate de başlatıyoruz
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -99,8 +179,10 @@ class _ItemDetailsScreenState extends State<ItemDetailsScreen> {
                     Obx(() => IconButton(
                         onPressed: () {
                           if (itemDetailsController.isFavorite) {
+                            deleteItemToFavoriteList();
                             //delete item from favorites
                           } else {
+                            addItemToFavoriteList();
                             //save item to user favorites
                           }
                         },
