@@ -57,15 +57,14 @@ class _ItemDetailsScreenState extends State<ItemDetailsScreen> {
     try {
       var res = await http.post(Uri.parse(API.favoriteValidate), body: {
         'user_id': currentUser.user.user_id.toString(),
-        'item_id': widget.itemInfo.item_id
+        'item_id': widget.itemInfo.item_id.toString()
       });
       if (res.statusCode == 200) {
         var resBodyOfValidateFavorite = jsonDecode(res.body);
         if (resBodyOfValidateFavorite['favoriteFound'] == true) {
-          Fluttertoast.showToast(
-              msg: "İtem saved to  Favorite List succesfully");
+          itemDetailsController.setIsFavorite(true);
         } else {
-          Fluttertoast.showToast(msg: "İtem not saved to Favorite List ");
+          itemDetailsController.setIsFavorite(false);
         }
       } else {
         Fluttertoast.showToast(msg: "Status is not 200");
@@ -80,7 +79,7 @@ class _ItemDetailsScreenState extends State<ItemDetailsScreen> {
     try {
       var res = await http.post(Uri.parse(API.favoriteAdd), body: {
         'user_id': currentUser.user.user_id.toString(),
-        'item_id': widget.itemInfo.item_id
+        'item_id': widget.itemInfo.item_id.toString()
       });
       if (res.statusCode == 200) {
         var resBodyOfAddFavorite = jsonDecode(res.body);
@@ -131,6 +130,7 @@ class _ItemDetailsScreenState extends State<ItemDetailsScreen> {
   void initState() {
     // TODO: implement initState
     super.initState();
+    validateFavoriteList();
   }
 
   @override
@@ -178,7 +178,7 @@ class _ItemDetailsScreenState extends State<ItemDetailsScreen> {
                     const Spacer(),
                     Obx(() => IconButton(
                         onPressed: () {
-                          if (itemDetailsController.isFavorite) {
+                          if (itemDetailsController.isFavorite == true) {
                             deleteItemToFavoriteList();
                             //delete item from favorites
                           } else {
