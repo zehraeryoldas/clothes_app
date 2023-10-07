@@ -112,6 +112,7 @@ class _ItemDetailsScreenState extends State<ItemDetailsScreen> {
         if (resBodyOfDeleteFavorite['success'] == true) {
           Fluttertoast.showToast(msg: "İtem deleted from your Favorite List");
           //burada da kullanıcının favori listesinde mevcut olup olmadığını veya mevcut olmadığını doğrulamamız gerekmektedir.
+          validateFavoriteList();
         } else {
           Fluttertoast.showToast(
               msg: "İtem not deleted from your Favorite List");
