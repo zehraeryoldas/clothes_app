@@ -40,4 +40,7 @@ class API {
 
 //favoriteValidate
   static const favoriteValidate = "$hostConnect/favorite/validate_favorite.php";
+
+  //readToFavorite
+  static const readToFavorite = "$hostConnect/favorite/read.php";
 }
