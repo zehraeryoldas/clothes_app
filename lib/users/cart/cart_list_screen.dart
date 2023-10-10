@@ -38,7 +38,7 @@ class _CartListScreenState extends State<CartListScreen> {
           cartListOfCurrentUser.add(Cart.fromJson(eachCurrentUserCartItemData));
         }
       } else {
-        Fluttertoast.showToast(msg: "Error Occurred while executing query");
+        Fluttertoast.showToast(msg: "your Cart list Empty");
       }
 
       cartListController.setList(cartListOfCurrentUser);
