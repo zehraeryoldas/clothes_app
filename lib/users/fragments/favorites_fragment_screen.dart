@@ -106,6 +106,7 @@ class FavoriteFragmentScreen extends StatelessWidget {
               physics: const NeverScrollableScrollPhysics(),
               scrollDirection: Axis.vertical,
               itemBuilder: (context, index) {
+                //yani bir favorite öğesi kaydını tek tek görüntüleyeceğiz
                 Favorite eachFavoriteItemRecord = dataSnapShot.data![index];
 
                 return GestureDetector(
