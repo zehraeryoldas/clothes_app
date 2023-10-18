@@ -43,4 +43,7 @@ class API {
 
   //readToFavorite
   static const readToFavorite = "$hostConnect/favorite/read.php";
+
+  //searchItems
+  static const searchItems = "$hostConnect/items/search.php";
 }
