@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'package:clothes_app/api_connection/api_connection.dart';
 import 'package:clothes_app/users/cart/cart_list_screen.dart';
 import 'package:clothes_app/users/items/item_detail_screen.dart';
+import 'package:clothes_app/users/items/search_items.dart';
 import 'package:clothes_app/users/model/clothes.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
@@ -114,7 +115,9 @@ class HomeFragmentScreen extends StatelessWidget {
         controller: searchController,
         decoration: InputDecoration(
           prefixIcon: IconButton(
-            onPressed: () {},
+            onPressed: () {
+              Get.to(SearchItems(typeKeywords: searchController.text));
+            },
             icon: const Icon(
               Icons.search,
               color: Colors.purpleAccent,
