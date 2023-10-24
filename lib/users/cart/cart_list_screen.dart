@@ -2,8 +2,10 @@ import 'dart:convert';
 
 import 'package:clothes_app/api_connection/api_connection.dart';
 import 'package:clothes_app/users/controller/cart_list_controller.dart';
+import 'package:clothes_app/users/items/item_detail_screen.dart';
 import 'package:clothes_app/users/model/cart.dart';
 import 'package:clothes_app/users/model/clothes.dart';
+import 'package:clothes_app/users/order/order_now_screen.dart';
 import 'package:clothes_app/users/userPreferenes/current_user.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
@@ -101,6 +103,36 @@ class _CartListScreenState extends State<CartListScreen> {
     } catch (e) {
       Fluttertoast.showToast(msg: "Error: $e");
     }
+  }
+
+  List<Map<String, dynamic>> getSelectedCartListItemsInformation() {
+    List<Map<String, dynamic>> selectedCartListItemsInformation = [];
+
+    //öncelikle seçili ürün listemizi kontrol ediyoruz
+    if (cartListController.selectedItem.isNotEmpty) {
+      //sepet listemizde ki her bir ürün için döngüyü çalıştırıyoruz
+      //seçilen her ürün için
+      for (var selectedCartListItem in cartListController.cartList) {
+        //seçilen ürün listesi , seçilen ürüni eğer içeriyorsa , seçilen ürün id' lerine bakılır
+        if (cartListController.selectedItem
+            .contains(selectedCartListItem.cart_id)) {
+          Map<String, dynamic> itemInformation = {
+            "item_id": selectedCartListItem.item_id,
+            "name": selectedCartListItem.name,
+            "image": selectedCartListItem.image,
+            "color": selectedCartListItem.color,
+            "size": selectedCartListItem.size,
+            "quantity": selectedCartListItem.quantity,
+            "totalamount":
+                selectedCartListItem.price! + selectedCartListItem.quantity!,
+          };
+          //ve listemize kayıt ediyoruz
+          selectedCartListItemsInformation.add(itemInformation);
+        }
+      }
+    }
+    //ve bu listeyi döndürüyoruz
+    return selectedCartListItemsInformation;
   }
 
   @override
@@ -241,7 +273,9 @@ class _CartListScreenState extends State<CartListScreen> {
                       ),
                       Expanded(
                         child: GestureDetector(
-                          onTap: () {},
+                          onTap: () {
+                            Get.to(ItemDetailsScreen(itemInfo: clothesModel));
+                          },
                           child: Container(
                             margin: EdgeInsets.fromLTRB(
                                 0,
@@ -435,7 +469,18 @@ class _CartListScreenState extends State<CartListScreen> {
                         : Colors.white24,
                     borderRadius: BorderRadius.circular(30),
                     child: InkWell(
-                      onTap: () {},
+                      onTap: () {
+                        //seçilen ürün sayısı sıfırdan büyük ise geçiş yap
+                        cartListController.selectedItem.isNotEmpty
+                            ? Get.to(OrderNowScreen(
+                                selectedCartListItems:
+                                    getSelectedCartListItemsInformation(), //kullanıcı kartı listesinde ki seçilen bilgiler,
+                                totalAmount:
+                                    cartListController.total, //ve toplam tutar
+                                selectedCartID: cartListController.selectedItem,
+                              ))
+                            : null;
+                      },
                       child: const Padding(
                         padding:
                             EdgeInsets.symmetric(horizontal: 20, vertical: 8),
