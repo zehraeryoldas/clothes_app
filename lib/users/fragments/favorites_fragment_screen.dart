@@ -2,6 +2,7 @@ import 'dart:convert';
 
 import 'package:clothes_app/api_connection/api_connection.dart';
 import 'package:clothes_app/users/items/item_detail_screen.dart';
+import 'package:clothes_app/users/model/clothes.dart';
 import 'package:clothes_app/users/model/favorite.dart';
 import 'package:clothes_app/users/userPreferenes/current_user.dart';
 import 'package:flutter/material.dart';
@@ -109,9 +110,22 @@ class FavoriteFragmentScreen extends StatelessWidget {
                 //yani bir favorite öğesi kaydını tek tek görüntüleyeceğiz
                 Favorite eachFavoriteItemRecord = dataSnapShot.data![index];
 
+//öğe detay sayfasına gidebilmem için clothes modeli entegre etmem gerekiyor
+//ve bütün öğe detayını görebilmem için tüm özellikleri belirtmem gerekiyor.
+                Clothes clickedClothItem = Clothes(
+                    item_id: eachFavoriteItemRecord.item_id,
+                    colors: eachFavoriteItemRecord.colors,
+                    image: eachFavoriteItemRecord.image,
+                    name: eachFavoriteItemRecord.name,
+                    price: eachFavoriteItemRecord.price,
+                    rating: eachFavoriteItemRecord.rating,
+                    sizes: eachFavoriteItemRecord.sizes,
+                    description: eachFavoriteItemRecord.description,
+                    tags: eachFavoriteItemRecord.tags);
+
                 return GestureDetector(
                   onTap: () {
-                    //Get.to(ItemDetailsScreen(itemInfo: eachClothItemRecord));
+                    Get.to(ItemDetailsScreen(itemInfo: clickedClothItem));
                   },
                   child: Container(
                     margin: EdgeInsets.fromLTRB(
