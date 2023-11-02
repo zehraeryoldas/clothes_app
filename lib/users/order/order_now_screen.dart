@@ -27,6 +27,11 @@ class OrderNowScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      appBar: AppBar(
+        backgroundColor: Colors.black,
+        title: const Text("Order Now"),
+        titleSpacing: 0,
+      ),
       backgroundColor: Colors.black,
       body: ListView(
         children: [
