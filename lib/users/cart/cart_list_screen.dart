@@ -123,8 +123,9 @@ class _CartListScreenState extends State<CartListScreen> {
             "color": selectedCartListItem.color,
             "size": selectedCartListItem.size,
             "quantity": selectedCartListItem.quantity,
+            "price": selectedCartListItem.price,
             "totalamount":
-                selectedCartListItem.price! + selectedCartListItem.quantity!,
+                selectedCartListItem.price! * selectedCartListItem.quantity!,
           };
           //ve listemize kayıt ediyoruz
           selectedCartListItemsInformation.add(itemInformation);
