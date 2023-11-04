@@ -341,9 +341,11 @@ class OrderNowScreen extends StatelessWidget {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     //name
+                    //size
+                    //price
                     Text(
                       eachSelectedItem['name'],
-                      maxLines: 2,
+                      maxLines: 1,
                       style: const TextStyle(
                           fontSize: 18,
                           color: Colors.white70,
@@ -353,18 +355,45 @@ class OrderNowScreen extends StatelessWidget {
                     const SizedBox(
                       height: 16,
                     ),
-
+//size + color
                     Text(
                       eachSelectedItem['size']
-                          .replaceAll("[", "")
-                          .replaceAll("]", ""),
+                              .replaceAll("[", "")
+                              .replaceAll("]", "") +
+                          "\n" +
+                          eachSelectedItem['color']
+                              .replaceAll("[", "")
+                              .replaceAll("]", ""),
                       maxLines: 2,
                       overflow: TextOverflow.ellipsis,
                       style: const TextStyle(fontSize: 12, color: Colors.grey),
+                    ),
+                    const SizedBox(
+                      height: 16,
+                    ),
+                    Text(
+                      "\$ ${eachSelectedItem['price']}",
+                      overflow: TextOverflow.ellipsis,
+                      style: const TextStyle(
+                          fontSize: 10,
+                          color: Colors.purpleAccent,
+                          fontWeight: FontWeight.bold),
+                    ),
+                    Text(
+                      "${eachSelectedItem["price"]} x ${eachSelectedItem["quantity"]} = ${eachSelectedItem["totalamount"]}",
+                      style: const TextStyle(color: Colors.grey, fontSize: 12),
                     )
                   ],
                 ),
               ))
+
+              //quantity
+              ,
+              Text(
+                "Q: ${eachSelectedItem["quantity"]}",
+                style:
+                    const TextStyle(fontSize: 24, color: Colors.purpleAccent),
+              )
             ],
           ),
         );
