@@ -1,18 +1,7 @@
 import 'package:clothes_app/users/controller/order_now_controller.dart';
+import 'package:clothes_app/users/order/order_confirmation.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'dart:convert';
-
-import 'package:clothes_app/api_connection/api_connection.dart';
-import 'package:clothes_app/users/items/item_detail_screen.dart';
-import 'package:clothes_app/users/model/clothes.dart';
-import 'package:clothes_app/users/model/favorite.dart';
-import 'package:clothes_app/users/userPreferenes/current_user.dart';
-import 'package:flutter/material.dart';
-import 'package:fluttertoast/fluttertoast.dart';
-import 'package:get/get.dart';
-import 'package:get/get_core/src/get_main.dart';
-import 'package:http/http.dart' as http;
 
 class OrderNowScreen extends StatelessWidget {
   OrderNowScreen(
@@ -258,7 +247,23 @@ class OrderNowScreen extends StatelessWidget {
               color: Colors.purpleAccent,
               borderRadius: BorderRadius.circular(30),
               child: InkWell(
-                onTap: () {},
+                onTap: () {
+                  //sevkiyat adresi ve kullanıcı telefonu çok önemlidir o yüzden bir şart gireceğiz
+
+                  if (phoneNumberController.text == "" &&
+                      shipmentAddressController.text == "") {
+                    Get.to(OrderConfirmationScreen(
+                      selectedCartID: selectedCartID,
+                      selectedCartListItems: selectedCartListItems,
+                      totalAmount: totalAmount,
+                      deliverSystem: orderNowController.deliverSys,
+                      paymentSystem: orderNowController.paymentSys,
+                      phoneNumber: phoneNumberController.text,
+                      shipmentAddress: shipmentAddressController.text,
+                      note: noteToSellerController.text,
+                    ));
+                  }
+                },
                 borderRadius: BorderRadius.circular(30),
                 child: Padding(
                     padding: const EdgeInsets.symmetric(
