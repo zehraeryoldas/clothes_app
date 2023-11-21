@@ -1,6 +1,7 @@
 import 'package:clothes_app/users/controller/order_now_controller.dart';
 import 'package:clothes_app/users/order/order_confirmation.dart';
 import 'package:flutter/material.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:get/get.dart';
 
 class OrderNowScreen extends StatelessWidget {
@@ -250,8 +251,8 @@ class OrderNowScreen extends StatelessWidget {
                 onTap: () {
                   //sevkiyat adresi ve kullanıcı telefonu çok önemlidir o yüzden bir şart gireceğiz
 
-                  if (phoneNumberController.text == "" &&
-                      shipmentAddressController.text == "") {
+                  if (phoneNumberController.text.isNotEmpty &&
+                      shipmentAddressController.text.isNotEmpty) {
                     Get.to(OrderConfirmationScreen(
                       selectedCartID: selectedCartID,
                       selectedCartListItems: selectedCartListItems,
@@ -262,6 +263,8 @@ class OrderNowScreen extends StatelessWidget {
                       shipmentAddress: shipmentAddressController.text,
                       note: noteToSellerController.text,
                     ));
+                  } else {
+                    Fluttertoast.showToast(msg: "Please complete the form");
                   }
                 },
                 borderRadius: BorderRadius.circular(30),
