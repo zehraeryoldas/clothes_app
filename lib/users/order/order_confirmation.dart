@@ -1,4 +1,9 @@
+import 'dart:typed_data';
+
 import 'package:flutter/material.dart';
+import 'package:fluttertoast/fluttertoast.dart';
+import 'package:get/get_rx/src/rx_types/rx_types.dart';
+import 'package:get/get_state_manager/get_state_manager.dart';
 
 class OrderConfirmationScreen extends StatelessWidget {
   final List<int?>? selectedCartID;
@@ -10,7 +15,7 @@ class OrderConfirmationScreen extends StatelessWidget {
   final String? shipmentAddress;
   final String? note;
 
-  const OrderConfirmationScreen({
+  OrderConfirmationScreen({
     super.key,
     this.selectedCartID,
     this.selectedCartListItems,
@@ -22,8 +27,130 @@ class OrderConfirmationScreen extends StatelessWidget {
     this.note,
   });
 
+//  Bu satır, bir RxList nesnesi oluşturuyor.
+//   RxList, GetX paketinin bir parçasıdır ve değişiklikleri dinleyebilen bir liste sağlar.
+//    Burada, liste elemanları tamsayı (int) türündedir. Başlangıçta boş bir liste ile başlatılır.
+  final RxList<int> _imageSelectedByte = <int>[].obs;
+  Uint8List get imageSelectedByte => Uint8List.fromList(_imageSelectedByte);
+
+  final RxString _imageSelectedName = "".obs;
+  String get imageSelectedName => _imageSelectedName.value;
+
+  setSelectedImage(Uint8List selectedImage) {
+    _imageSelectedByte.value = selectedImage;
+  }
+
+  setSelectedImageName(String selectedImageName) {
+    _imageSelectedName.value = selectedImageName;
+  }
+
   @override
   Widget build(BuildContext context) {
-    return Container();
+    return Scaffold(
+      backgroundColor: Colors.black,
+      body: Center(
+        child: Column(
+          children: [
+            //image
+            Image.asset(
+              "assets/images/transaction.png",
+              width: 160,
+            ),
+            const SizedBox(
+              height: 4,
+            ),
+            const Padding(
+              padding: EdgeInsets.all(8.0),
+              child: Text(
+                "Please Attach Transaction \nProof Screenshot /image",
+                textAlign: TextAlign.center,
+                style: TextStyle(
+                    color: Colors.white70,
+                    fontWeight: FontWeight.bold,
+                    fontSize: 16),
+              ),
+            ),
+            const SizedBox(
+              height: 30,
+            ),
+
+            //select image btn
+            Material(
+                elevation: 8,
+                color: Colors.purpleAccent,
+                borderRadius: BorderRadius.circular(30),
+                child: InkWell(
+                  onTap: () {},
+                  borderRadius: BorderRadius.circular(30),
+                  child: const Padding(
+                      padding:
+                          EdgeInsets.symmetric(horizontal: 30, vertical: 12),
+                      child: Text(
+                        "Select Image",
+                        style: TextStyle(color: Colors.white, fontSize: 16),
+                      )),
+                )),
+            const SizedBox(
+              height: 16,
+            ),
+
+            //display selected image by user
+            Obx(() => ConstrainedBox(
+                  constraints: BoxConstraints(
+                      maxWidth: MediaQuery.of(context).size.width * 0.7,
+                      maxHeight: MediaQuery.of(context).size.width * 0.6),
+                  //görüntünün seçili olup olmadığını kontrol edebilmek için
+                  child: imageSelectedByte
+                          .isNotEmpty //uzunlupa göre seçilen görüntünün sıfırdan büyük olamsıdır.
+                      ? Image.memory(
+                          imageSelectedByte,
+                          fit: BoxFit.contain,
+                        )
+                      : const Placeholder(
+                          color: Colors.white60,
+                        ),
+                )),
+
+            const SizedBox(
+              height: 16,
+            ),
+
+            //onayle ve devam et butonu
+            Obx(() => Material(
+                  elevation: 8,
+                  color: imageSelectedByte.isNotEmpty
+                      ? Colors.purpleAccent
+                      : Colors.grey,
+                  borderRadius: BorderRadius.circular(30),
+                  child: InkWell(
+                    onTap: () {
+                      if (imageSelectedByte.isNotEmpty) {
+                        //save order info
+                      } else {
+                        Fluttertoast.showToast(
+                            msg:
+                                "Please attach the transaction proof / screenshott.");
+                      }
+                    },
+                    borderRadius: BorderRadius.circular(30),
+                    child: const Padding(
+                      padding: EdgeInsets.symmetric(
+                        horizontal: 30,
+                        vertical: 12,
+                      ),
+                      child: Text(
+                        "Confirmed & Proceed",
+                        style: TextStyle(
+                          color: Colors.white70,
+                          fontSize: 16,
+                        ),
+                      ),
+                    ),
+                  ),
+                ))
+          ],
+        ),
+      ),
+    );
   }
 }
