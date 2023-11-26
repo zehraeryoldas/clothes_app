@@ -2,8 +2,8 @@ import 'dart:typed_data';
 
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
-import 'package:get/get_rx/src/rx_types/rx_types.dart';
-import 'package:get/get_state_manager/get_state_manager.dart';
+import 'package:get/get.dart';
+import 'package:image_picker/image_picker.dart';
 
 class OrderConfirmationScreen extends StatelessWidget {
   final List<int?>? selectedCartID;
@@ -44,6 +44,20 @@ class OrderConfirmationScreen extends StatelessWidget {
     _imageSelectedName.value = selectedImageName;
   }
 
+  final ImagePicker _picker = ImagePicker();
+  chooseImageFromGallery() async {
+    final pickedImageXFile =
+        await _picker.pickImage(source: ImageSource.gallery);
+
+    if (pickedImageXFile != null) {
+      final pickedImageBytes = await pickedImageXFile.readAsBytes();
+      setSelectedImage(pickedImageBytes);
+      setSelectedImageName(pickedImageXFile.path);
+    } else {
+      Fluttertoast.showToast(msg: "No image selected");
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -80,7 +94,9 @@ class OrderConfirmationScreen extends StatelessWidget {
                 color: Colors.purpleAccent,
                 borderRadius: BorderRadius.circular(30),
                 child: InkWell(
-                  onTap: () {},
+                  onTap: () {
+                    chooseImageFromGallery();
+                  },
                   borderRadius: BorderRadius.circular(30),
                   child: const Padding(
                       padding:
@@ -101,7 +117,7 @@ class OrderConfirmationScreen extends StatelessWidget {
                       maxHeight: MediaQuery.of(context).size.width * 0.6),
                   //görüntünün seçili olup olmadığını kontrol edebilmek için
                   child: imageSelectedByte
-                          .isNotEmpty //uzunlupa göre seçilen görüntünün sıfırdan büyük olamsıdır.
+                          .isNotEmpty //uzunlupa göre seçilen görüntünün sıfırdan büyük olmasıdır.
                       ? Image.memory(
                           imageSelectedByte,
                           fit: BoxFit.contain,
