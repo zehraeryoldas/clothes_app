@@ -1,8 +1,17 @@
+import 'dart:convert';
 import 'dart:typed_data';
 
+import 'package:clothes_app/api_connection/api_connection.dart';
+import 'package:clothes_app/users/model/order.dart';
+import 'package:clothes_app/users/model/user.dart';
+import 'package:clothes_app/users/userPreferenes/current_user.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:get/get.dart';
+import 'package:get/route_manager.dart';
+import 'package:http/http.dart' as http;
+import 'package:path/path.dart' as path;
 import 'package:image_picker/image_picker.dart';
 
 class OrderConfirmationScreen extends StatelessWidget {
@@ -36,6 +45,8 @@ class OrderConfirmationScreen extends StatelessWidget {
   final RxString _imageSelectedName = "".obs;
   String get imageSelectedName => _imageSelectedName.value;
 
+  final CurrentUser _currentUser = Get.put(CurrentUser());
+
   setSelectedImage(Uint8List selectedImage) {
     _imageSelectedByte.value = selectedImage;
   }
@@ -55,6 +66,47 @@ class OrderConfirmationScreen extends StatelessWidget {
       setSelectedImageName(pickedImageXFile.path);
     } else {
       Fluttertoast.showToast(msg: "No image selected");
+    }
+  }
+
+  saveNewOrderInfo() async {
+    //seçilenleri içeren bu seçili kart listesi öğesi bilgisini alacağız
+    // ve bunu bir dizeye dönüştüreceğiz.
+    String selectedItemsString = selectedCartListItems!
+        .map((eachSelectedItem) => jsonEncode(eachSelectedItem))
+        .toList()
+        .join("||");
+
+    Order order = Order(
+        order_id: 1,
+        user_id: _currentUser.user.user_id,
+        selectedItems: selectedItemsString,
+        deliverSystem: deliverSystem,
+        paymentSystem: paymentSystem,
+        note: note,
+        totalamount: totalAmount,
+        image: imageSelectedName,
+        status: "new",
+        dateTime: DateTime.now(),
+        shipmentAddress: shipmentAddress,
+        phoneNumber: phoneNumber);
+
+    try {
+      var res = await http.post(Uri.parse(API.hostOrder),
+          body: order.toJson(base64Encode(imageSelectedByte)));
+      if (res.statusCode == 200) {
+        var data = jsonDecode(res.body);
+        if (data['success'] == true) {
+        } else {
+          Fluttertoast.showToast(
+              msg:
+                  "incorrect credentials. Please write correct password or email and try again ");
+        }
+      } else {
+        Fluttertoast.showToast(msg: "Status is not 200");
+      }
+    } catch (errorMsg) {
+      print("Error :: $errorMsg");
     }
   }
 
@@ -142,6 +194,7 @@ class OrderConfirmationScreen extends StatelessWidget {
                     onTap: () {
                       if (imageSelectedByte.isNotEmpty) {
                         //save order info
+                        saveNewOrderInfo();
                       } else {
                         Fluttertoast.showToast(
                             msg:
