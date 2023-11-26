@@ -46,4 +46,7 @@ class API {
 
   //searchItems
   static const searchItems = "$hostConnect/items/search.php";
+
+  //order
+  static const hostOrder = "$hostConnect/order/add.php";
 }
