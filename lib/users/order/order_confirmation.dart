@@ -94,6 +94,10 @@ class OrderConfirmationScreen extends StatelessWidget {
       var res = await http.post(
         Uri.parse(API.hostOrder),
         body: order.toJson(base64Encode(imageSelectedByte)),
+        //  Bu iki işlem birleştirildiğinde, order.toJson(base64Encode(imageSelectedByte)) ifadesi,
+        // Order sınıfının özelliklerini JSON formatına dönüştürür ve bu sırada içerisine base64 ile kodlanmış bir görüntüyü de ekler.
+        //Bu genellikle, bir HTTP isteği gönderirken verileri düzgün bir şekilde sunucuya iletmek için kullanılır.
+        //Sunucu tarafında bu veriler alındığında, JSON'dan çözülen nesnenin içinde base64 ile kodlanmış bir görüntü bulunacaktır.
       );
 
       if (res.statusCode == 200) {
