@@ -254,10 +254,10 @@ class OrderNowScreen extends StatelessWidget {
                   if (phoneNumberController.text.isNotEmpty &&
                       shipmentAddressController.text.isNotEmpty) {
                     Get.to(OrderConfirmationScreen(
-                      selectedCartID: selectedCartID,
-                      selectedCartListItems: selectedCartListItems,
+                      selectedCartIDs: selectedCartID,
+                      selectedCartListItemsInfo: selectedCartListItems,
                       totalAmount: totalAmount,
-                      deliverSystem: orderNowController.deliverSys,
+                      deliverySystem: orderNowController.deliverSys,
                       paymentSystem: orderNowController.paymentSys,
                       phoneNumber: phoneNumberController.text,
                       shipmentAddress: shipmentAddressController.text,
