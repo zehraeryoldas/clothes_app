@@ -2,10 +2,10 @@ class Order {
   int? order_id;
   int? user_id;
   String? selectedItems;
-  String? deliverSystem;
+  String? deliverySystem;
   String? paymentSystem;
   String? note;
-  double? totalamount;
+  double? totalAmount;
   String? image;
   String? status;
   DateTime? dateTime;
@@ -16,10 +16,10 @@ class Order {
     this.order_id,
     this.user_id,
     this.selectedItems,
-    this.deliverSystem,
+    this.deliverySystem,
     this.paymentSystem,
     this.note,
-    this.totalamount,
+    this.totalAmount,
     this.image,
     this.status,
     this.dateTime,
@@ -31,13 +31,12 @@ class Order {
         "order_id": order_id.toString(),
         "user_id": user_id.toString(),
         "selectedItems": selectedItems,
-        "deliverSystem": deliverSystem,
+        "deliverySystem": deliverySystem,
         "paymentSystem": paymentSystem,
         "note": note,
-        "totalamount": totalamount!.toStringAsFixed(2),
+        "totalAmount": totalAmount!.toStringAsFixed(2),
         "image": image,
         "status": status,
-        "dateTime": dateTime.toString(),
         "shipmentAddress": shipmentAddress,
         "phoneNumber": phoneNumber,
         "imageFile": imageSelectedBase64,
