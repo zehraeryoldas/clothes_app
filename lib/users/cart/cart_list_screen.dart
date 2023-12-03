@@ -474,11 +474,12 @@ class _CartListScreenState extends State<CartListScreen> {
                         //seçilen ürün sayısı sıfırdan büyük ise geçiş yap
                         cartListController.selectedItem.isNotEmpty
                             ? Get.to(OrderNowScreen(
-                                selectedCartListItems:
+                                selectedCartListItemsInfo:
                                     getSelectedCartListItemsInformation(), //kullanıcı kartı listesinde ki seçilen bilgiler,
                                 totalAmount:
                                     cartListController.total, //ve toplam tutar
-                                selectedCartID: cartListController.selectedItem,
+                                selectedCartIDs:
+                                    cartListController.selectedItem,
                               ))
                             : null;
                       },
