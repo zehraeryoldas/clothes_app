@@ -5,11 +5,9 @@ import 'package:fluttertoast/fluttertoast.dart';
 import 'package:get/get.dart';
 
 class OrderNowScreen extends StatelessWidget {
-  OrderNowScreen(
-      {super.key,
-      this.selectedCartListItems,
-      this.totalAmount,
-      this.selectedCartID});
+  final List<Map<String, dynamic>>? selectedCartListItemsInfo;
+  final double? totalAmount;
+  final List<int>? selectedCartIDs;
 
   OrderNowController orderNowController = Get.put(OrderNowController());
   List<String> deliverySystemNamesList = [
@@ -17,230 +15,264 @@ class OrderNowScreen extends StatelessWidget {
     "DHL",
     "United Parcel Service"
   ];
-  List<String> applePaySystemNamesList = [
+  List<String> paymentSystemNamesList = [
     "Apple Pay",
-    "Wire transfer",
-    "Google Pay",
+    "Wire Transfer",
+    "Google Pay"
   ];
-  final List<Map<String, dynamic>>? selectedCartListItems;
-  final double? totalAmount;
-  final List<int>? selectedCartID;
 
   TextEditingController phoneNumberController = TextEditingController();
   TextEditingController shipmentAddressController = TextEditingController();
   TextEditingController noteToSellerController = TextEditingController();
 
+  OrderNowScreen({
+    super.key,
+    this.selectedCartListItemsInfo,
+    this.totalAmount,
+    this.selectedCartIDs,
+  });
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: Colors.black,
       appBar: AppBar(
         backgroundColor: Colors.black,
         title: const Text("Order Now"),
         titleSpacing: 0,
       ),
-      backgroundColor: Colors.black,
       body: ListView(
         children: [
           //display selected items from cart list
-
           displaySelectedItemsFromUserCart(),
 
-          const SizedBox(
-            height: 30,
-          ),
-//delivery sistem
+          const SizedBox(height: 30),
+
+          //delivery system
           const Padding(
             padding: EdgeInsets.symmetric(horizontal: 16.0),
             child: Text(
-              "Delivery System: ",
+              'Delivery System:',
               style: TextStyle(
-                  fontSize: 18,
-                  color: Colors.white70,
-                  fontWeight: FontWeight.bold),
+                fontSize: 18,
+                color: Colors.white70,
+                fontWeight: FontWeight.bold,
+              ),
             ),
           ),
-
           Padding(
             padding: const EdgeInsets.all(18.0),
             child: Column(
               children: deliverySystemNamesList.map((deliverySystemName) {
                 return Obx(() => RadioListTile<String>(
-                    tileColor: Colors.white24,
-                    dense: true,
-                    activeColor: Colors.purpleAccent,
-                    title: Text(
-                      deliverySystemName,
-                      style:
-                          const TextStyle(fontSize: 16, color: Colors.white38),
-                    ),
-                    value: deliverySystemName,
-                    groupValue: orderNowController.deliverSys,
-                    onChanged: (newDeliverSystemValue) {
-                      orderNowController
-                          .setDeliverSyatem(newDeliverSystemValue!);
-                    }));
+                      tileColor: Colors.white24,
+                      dense: true,
+                      activeColor: Colors.purpleAccent,
+                      title: Text(
+                        deliverySystemName,
+                        style: const TextStyle(
+                            fontSize: 16, color: Colors.white38),
+                      ),
+                      value: deliverySystemName,
+                      groupValue: orderNowController.deliverSys,
+                      onChanged: (newDeliverySystemValue) {
+                        orderNowController
+                            .setDeliverSyatem(newDeliverySystemValue!);
+                      },
+                    ));
               }).toList(),
             ),
           ),
 
-//payment sistem
+          const SizedBox(height: 16),
+
+          //payment system
           const Padding(
             padding: EdgeInsets.symmetric(horizontal: 16.0),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
-                  "Payment System: ",
+                  'Payment System:',
                   style: TextStyle(
-                      fontSize: 18,
-                      color: Colors.white70,
-                      fontWeight: FontWeight.bold),
+                    fontSize: 18,
+                    color: Colors.white70,
+                    fontWeight: FontWeight.bold,
+                  ),
                 ),
-                SizedBox(
-                  height: 2,
-                ),
+                SizedBox(height: 2),
                 Text(
-                  "Company Account Number / ID: \nY87Y-HJF9-CVBN-4321 ",
+                  'Company Account Number / ID: \nY87Y-HJF9-CVBN-4321',
                   style: TextStyle(
-                      fontSize: 14,
-                      color: Colors.white38,
-                      fontWeight: FontWeight.bold),
+                    fontSize: 14,
+                    color: Colors.white38,
+                    fontWeight: FontWeight.bold,
+                  ),
                 ),
               ],
             ),
           ),
-
           Padding(
             padding: const EdgeInsets.all(18.0),
             child: Column(
-              children: applePaySystemNamesList.map((paymentSystemName) {
+              children: paymentSystemNamesList.map((paymentSystemName) {
                 return Obx(() => RadioListTile<String>(
-                    tileColor: Colors.white24,
-                    dense: true,
-                    activeColor: Colors.purpleAccent,
-                    title: Text(
-                      paymentSystemName,
-                      style:
-                          const TextStyle(fontSize: 16, color: Colors.white38),
-                    ),
-                    value: paymentSystemName,
-                    groupValue: orderNowController.paymentSys,
-                    onChanged: (newPaymentSystemValue) {
-                      orderNowController
-                          .setPaymentSystem(newPaymentSystemValue!);
-                    }));
+                      tileColor: Colors.white24,
+                      dense: true,
+                      activeColor: Colors.purpleAccent,
+                      title: Text(
+                        paymentSystemName,
+                        style: const TextStyle(
+                            fontSize: 16, color: Colors.white38),
+                      ),
+                      value: paymentSystemName,
+                      groupValue: orderNowController.paymentSys,
+                      onChanged: (newPaymentSystemValue) {
+                        orderNowController
+                            .setPaymentSystem(newPaymentSystemValue!);
+                      },
+                    ));
               }).toList(),
             ),
           ),
+
+          const SizedBox(height: 16),
+
           //phone number
           const Padding(
-            padding: EdgeInsets.symmetric(horizontal: 16),
+            padding: EdgeInsets.symmetric(horizontal: 16.0),
             child: Text(
-              'Phone Number',
+              'Phone Number:',
               style: TextStyle(
-                  fontSize: 18,
-                  color: Colors.white70,
-                  fontWeight: FontWeight.bold),
+                fontSize: 18,
+                color: Colors.white70,
+                fontWeight: FontWeight.bold,
+              ),
             ),
           ),
           Padding(
             padding: const EdgeInsets.fromLTRB(16, 8, 16, 16),
             child: TextField(
-              style: const TextStyle(
-                color: Colors.white54,
-              ),
+              style: const TextStyle(color: Colors.white54),
               controller: phoneNumberController,
               decoration: InputDecoration(
-                hintText: "any Contact Number..",
-                hintStyle: const TextStyle(color: Colors.white24),
-                border:
-                    OutlineInputBorder(borderRadius: BorderRadius.circular(12)),
+                hintText: 'any Contact Number..',
+                hintStyle: const TextStyle(
+                  color: Colors.white24,
+                ),
+                border: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(12),
+                ),
                 focusedBorder: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(12),
-                    borderSide: const BorderSide(color: Colors.grey, width: 2)),
+                  borderRadius: BorderRadius.circular(12),
+                  borderSide: const BorderSide(
+                    color: Colors.grey,
+                    width: 2,
+                  ),
+                ),
                 enabledBorder: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(12),
-                    borderSide:
-                        const BorderSide(color: Colors.white24, width: 2)),
+                  borderRadius: BorderRadius.circular(12),
+                  borderSide: const BorderSide(
+                    color: Colors.white24,
+                    width: 2,
+                  ),
+                ),
               ),
             ),
           ),
 
-          const SizedBox(
-            height: 16,
-          ),
+          const SizedBox(height: 16),
+
           //shipment address
           const Padding(
-            padding: EdgeInsets.symmetric(horizontal: 16),
+            padding: EdgeInsets.symmetric(horizontal: 16.0),
             child: Text(
-              'Shipment Address: ',
+              'Shipment Address:',
               style: TextStyle(
-                  fontSize: 18,
-                  color: Colors.white70,
-                  fontWeight: FontWeight.bold),
+                fontSize: 18,
+                color: Colors.white70,
+                fontWeight: FontWeight.bold,
+              ),
             ),
           ),
           Padding(
             padding: const EdgeInsets.fromLTRB(16, 8, 16, 16),
             child: TextField(
-              style: const TextStyle(
-                color: Colors.white54,
-              ),
+              style: const TextStyle(color: Colors.white54),
               controller: shipmentAddressController,
               decoration: InputDecoration(
-                hintText: "your shipment address..",
-                hintStyle: const TextStyle(color: Colors.white24),
-                border:
-                    OutlineInputBorder(borderRadius: BorderRadius.circular(12)),
+                hintText: 'your Shipment Address..',
+                hintStyle: const TextStyle(
+                  color: Colors.white24,
+                ),
+                border: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(12),
+                ),
                 focusedBorder: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(12),
-                    borderSide: const BorderSide(color: Colors.grey, width: 2)),
+                  borderRadius: BorderRadius.circular(12),
+                  borderSide: const BorderSide(
+                    color: Colors.grey,
+                    width: 2,
+                  ),
+                ),
                 enabledBorder: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(12),
-                    borderSide:
-                        const BorderSide(color: Colors.white24, width: 2)),
+                  borderRadius: BorderRadius.circular(12),
+                  borderSide: const BorderSide(
+                    color: Colors.white24,
+                    width: 2,
+                  ),
+                ),
               ),
             ),
           ),
-          const SizedBox(
-            height: 16,
-          ),
+
+          const SizedBox(height: 16),
+
           //note to seller
           const Padding(
-            padding: EdgeInsets.symmetric(horizontal: 16),
+            padding: EdgeInsets.symmetric(horizontal: 16.0),
             child: Text(
-              'Note to seller: ',
+              'Note to Seller:',
               style: TextStyle(
-                  fontSize: 18,
-                  color: Colors.white70,
-                  fontWeight: FontWeight.bold),
+                fontSize: 18,
+                color: Colors.white70,
+                fontWeight: FontWeight.bold,
+              ),
             ),
           ),
           Padding(
             padding: const EdgeInsets.fromLTRB(16, 8, 16, 16),
             child: TextField(
-              style: const TextStyle(
-                color: Colors.white54,
-              ),
+              style: const TextStyle(color: Colors.white54),
               controller: noteToSellerController,
               decoration: InputDecoration(
-                hintText: "Any note you want to write to seller..",
-                hintStyle: const TextStyle(color: Colors.white24),
-                border:
-                    OutlineInputBorder(borderRadius: BorderRadius.circular(12)),
+                hintText: 'Any note you want to write to seller..',
+                hintStyle: const TextStyle(
+                  color: Colors.white24,
+                ),
+                border: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(12),
+                ),
                 focusedBorder: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(12),
-                    borderSide: const BorderSide(color: Colors.grey, width: 2)),
+                  borderRadius: BorderRadius.circular(12),
+                  borderSide: const BorderSide(
+                    color: Colors.grey,
+                    width: 2,
+                  ),
+                ),
                 enabledBorder: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(12),
-                    borderSide:
-                        const BorderSide(color: Colors.white24, width: 2)),
+                  borderRadius: BorderRadius.circular(12),
+                  borderSide: const BorderSide(
+                    color: Colors.white24,
+                    width: 2,
+                  ),
+                ),
               ),
             ),
           ),
-          const SizedBox(
-            height: 30,
-          ),
+
+          const SizedBox(height: 30),
+
           //pay amount now btn
           Padding(
             padding: const EdgeInsets.symmetric(horizontal: 16),
@@ -249,13 +281,11 @@ class OrderNowScreen extends StatelessWidget {
               borderRadius: BorderRadius.circular(30),
               child: InkWell(
                 onTap: () {
-                  //sevkiyat adresi ve kullanıcı telefonu çok önemlidir o yüzden bir şart gireceğiz
-
                   if (phoneNumberController.text.isNotEmpty &&
                       shipmentAddressController.text.isNotEmpty) {
                     Get.to(OrderConfirmationScreen(
-                      selectedCartIDs: selectedCartID,
-                      selectedCartListItemsInfo: selectedCartListItems,
+                      selectedCartIDs: selectedCartIDs,
+                      selectedCartListItemsInfo: selectedCartListItemsInfo,
                       totalAmount: totalAmount,
                       deliverySystem: orderNowController.deliverSys,
                       paymentSystem: orderNowController.paymentSys,
@@ -264,35 +294,42 @@ class OrderNowScreen extends StatelessWidget {
                       note: noteToSellerController.text,
                     ));
                   } else {
-                    Fluttertoast.showToast(msg: "Please complete the form");
+                    Fluttertoast.showToast(msg: "Please complete the form.");
                   }
                 },
                 borderRadius: BorderRadius.circular(30),
                 child: Padding(
-                    padding: const EdgeInsets.symmetric(
-                        horizontal: 16, vertical: 12),
-                    child: Row(
-                      children: [
-                        Text(
-                          "\$${totalAmount!.toStringAsFixed(2)}",
-                          style: const TextStyle(
-                              color: Colors.white70,
-                              fontSize: 20,
-                              fontWeight: FontWeight.bold),
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 16,
+                    vertical: 12,
+                  ),
+                  child: Row(
+                    children: [
+                      Text(
+                        "\$${totalAmount!.toStringAsFixed(2)}",
+                        style: const TextStyle(
+                          color: Colors.white70,
+                          fontSize: 20,
+                          fontWeight: FontWeight.bold,
                         ),
-                        const Spacer(),
-                        const Text(
-                          "Pay Amount Now",
-                          style: TextStyle(
-                              color: Colors.white70,
-                              fontSize: 16,
-                              fontWeight: FontWeight.bold),
-                        )
-                      ],
-                    )),
+                      ),
+                      const Spacer(),
+                      const Text(
+                        "Pay Amount Now",
+                        style: TextStyle(
+                          color: Colors.white,
+                          fontSize: 16,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
               ),
             ),
-          )
+          ),
+
+          const SizedBox(height: 30),
         ],
       ),
     );
@@ -300,32 +337,42 @@ class OrderNowScreen extends StatelessWidget {
 
   displaySelectedItemsFromUserCart() {
     return Column(
-      children: List.generate(selectedCartListItems!.length, (index) {
-        Map<String, dynamic> eachSelectedItem = selectedCartListItems![index];
+      children: List.generate(selectedCartListItemsInfo!.length, (index) {
+        Map<String, dynamic> eachSelectedItem =
+            selectedCartListItemsInfo![index];
+
         return Container(
-          margin: EdgeInsets.fromLTRB(16, index == 0 ? 16 : 8, 16,
-              index == selectedCartListItems!.length - 1 ? 16 : 8),
+          margin: EdgeInsets.fromLTRB(
+            16,
+            index == 0 ? 16 : 8,
+            16,
+            index == selectedCartListItemsInfo!.length - 1 ? 16 : 8,
+          ),
           decoration: BoxDecoration(
-              borderRadius: BorderRadius.circular(20),
-              color: Colors.white24,
-              boxShadow: const [
-                BoxShadow(
-                    offset: Offset(0, 0), blurRadius: 6, color: Colors.black26),
-              ]),
+            borderRadius: BorderRadius.circular(20),
+            color: Colors.white24,
+            boxShadow: const [
+              BoxShadow(
+                offset: Offset(0, 0),
+                blurRadius: 6,
+                color: Colors.black26,
+              ),
+            ],
+          ),
           child: Row(
             children: [
               //image
-
               ClipRRect(
                 borderRadius: const BorderRadius.only(
                   topLeft: Radius.circular(20),
                   bottomLeft: Radius.circular(20),
                 ),
                 child: FadeInImage(
-                  height: 130,
+                  height: 150,
                   width: 130,
                   fit: BoxFit.cover,
-                  placeholder: const AssetImage("images/place_holder.png"),
+                  placeholder:
+                      const AssetImage("assets/images/place_holder.png"),
                   image: NetworkImage(
                     eachSelectedItem["image"],
                   ),
@@ -341,67 +388,79 @@ class OrderNowScreen extends StatelessWidget {
 
               //name
               //size
-              //totalamount
+              //price
               Expanded(
-                  child: Padding(
-                padding: const EdgeInsets.all(8),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    //name
-                    //size
-                    //price
-                    Text(
-                      eachSelectedItem['name'],
-                      maxLines: 1,
-                      style: const TextStyle(
+                child: Padding(
+                  padding: const EdgeInsets.all(8),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      //name
+                      Text(
+                        eachSelectedItem["name"],
+                        maxLines: 1,
+                        overflow: TextOverflow.ellipsis,
+                        style: const TextStyle(
                           fontSize: 18,
                           color: Colors.white70,
-                          fontWeight: FontWeight.bold),
-                      overflow: TextOverflow.ellipsis,
-                    ),
-                    const SizedBox(
-                      height: 16,
-                    ),
-//size + color
-                    Text(
-                      eachSelectedItem['size']
-                              .replaceAll("[", "")
-                              .replaceAll("]", "") +
-                          "\n" +
-                          eachSelectedItem['color']
-                              .replaceAll("[", "")
-                              .replaceAll("]", ""),
-                      maxLines: 2,
-                      overflow: TextOverflow.ellipsis,
-                      style: const TextStyle(fontSize: 12, color: Colors.grey),
-                    ),
-                    const SizedBox(
-                      height: 16,
-                    ),
-                    Text(
-                      "\$ ${eachSelectedItem['price']}",
-                      overflow: TextOverflow.ellipsis,
-                      style: const TextStyle(
-                          fontSize: 10,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+
+                      const SizedBox(height: 16),
+
+                      //size + color
+                      Text(
+                        eachSelectedItem["size"]
+                                .replaceAll("[", "")
+                                .replaceAll("]", "") +
+                            "\n" +
+                            eachSelectedItem["color"]
+                                .replaceAll("[", "")
+                                .replaceAll("]", ""),
+                        maxLines: 2,
+                        overflow: TextOverflow.ellipsis,
+                        style: const TextStyle(
+                          color: Colors.white54,
+                        ),
+                      ),
+
+                      const SizedBox(height: 16),
+
+                      //price
+                      Text(
+                        "\$ ${eachSelectedItem["totalAmount"]}",
+                        overflow: TextOverflow.ellipsis,
+                        style: const TextStyle(
+                          fontSize: 18,
                           color: Colors.purpleAccent,
-                          fontWeight: FontWeight.bold),
-                    ),
-                    Text(
-                      "${eachSelectedItem["price"]} x ${eachSelectedItem["quantity"]} = ${eachSelectedItem["totalamount"]}",
-                      style: const TextStyle(color: Colors.grey, fontSize: 12),
-                    )
-                  ],
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+
+                      Text(
+                        "${eachSelectedItem["price"]} x ${eachSelectedItem["quantity"]} = ${eachSelectedItem["totalAmount"]}",
+                        style: const TextStyle(
+                          color: Colors.grey,
+                          fontSize: 12,
+                        ),
+                      ),
+                    ],
+                  ),
                 ),
-              ))
+              ),
 
               //quantity
-              ,
-              Text(
-                "Q: ${eachSelectedItem["quantity"]}",
-                style:
-                    const TextStyle(fontSize: 24, color: Colors.purpleAccent),
-              )
+              Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: Text(
+                  "Q: ${eachSelectedItem["quantity"]}",
+                  style: const TextStyle(
+                    fontSize: 24,
+                    color: Colors.purpleAccent,
+                  ),
+                ),
+              ),
             ],
           ),
         );
